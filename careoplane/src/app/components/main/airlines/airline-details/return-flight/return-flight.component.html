@@ -1,0 +1,25 @@
+<div *ngFor="
+    let f of returnFlights|
+    filter:flight.destination:'origin':false |
+    filter:flight.origin:'destination':false |
+    priceFilter:num:classType|
+    dateFilter: ret:false
+    ">
+    <div *ngIf="CheckDate(flight)">
+        <app-flight 
+        [back]="'one'"
+        [flight]="flight" [admin]="admin" [roundTrip]="true" [classType]="classType"></app-flight>
+        <br/>
+        <br/>
+        <app-flight
+        [back]="'one'"
+        [flight]="f" [admin]="admin" [roundTrip]="true" [classType]="classType"></app-flight>
+        <div class="row">
+            <div class="col-md-2 offset-10 text-center">
+                <button mat-raised-button color="primary" style="margin: 0 auto;" (click)="Reserve(flight.id,f.id)" *ngIf="checkRole()">
+                    Reserve
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+<form [formGroup]="group" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field appearance="fill">
+        <mat-label>Origin</mat-label>
+        <mat-select [formControlName]="'origin'">
+          <mat-option *ngFor="let destination of destinations" [value]="destination">
+            {{destination}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="group.controls['origin'].hasError('required')">
+          Origin is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="fill">
+        <mat-label>Destination</mat-label>
+        <mat-select [formControlName]="'destination'">
+          <mat-option *ngFor="let destination of destinations" [value]="destination">
+            {{destination}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="group.controls['destination'].hasError('required')">
+          Destination is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field appearance="fill">
+        <mat-label>Departure date and time</mat-label>
+        <input matInput type="datetime" [formControlName]="'departure'">
+        <mat-error *ngIf="group.controls['departure'].hasError('required')">
+          Departure date and time is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="fill">
+        <mat-label>Arrival date and time</mat-label>
+        <input matInput type="datetime" [formControlName]="'arrival'">
+        <mat-error *ngIf="group.controls['arrival'].hasError('required')">
+          Arrival date and time is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <mat-form-field appearance="fill">
+        <mat-label>Distance</mat-label>
+        <input matInput type="number" [formControlName]="'distance'" min="1">
+        <mat-error *ngIf="group.controls['distance'].hasError('required')">
+          Distance is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="group.controls['distance'].hasError('min')">
+          Distance <strong>must</strong> be grater than zero
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-7" formArrayName="connectionsForm" cdkDropList (cdkDropListDropped)="drop($event)">
+      <div
+        class="row"
+        *ngFor="let connectionControl of getList(); let i = index"
+        [formGroupName]="i"
+        style="margin-top: 10px;"
+        cdkDrag>
+        <div class="col-md-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Connection</mat-label>
+            <mat-select [formControlName]="'city'">
+              <mat-option *ngFor="let destination of destinations" [value]="destination">
+                {{destination}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-1" >
+          <button type="button" class="drag-handle" mat-icon-button cdkDragHandle [disabled]="edit">
+            <mat-icon>unfold_more</mat-icon>
+          </button>
+        </div>
+        <div class="col-md-1">
+          <button mat-mini-fab (click)="onDeleteConnection(i)" color="warn" [disabled]="edit">X</button>
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-md-3">
+          <button mat-raised-button color="accent" type="button" [disabled]="edit" (click)="onAddConnection()">Add Connection</button>
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-md-3">
+          <button mat-raised-button color="warn" type="button" (click)="Cancel()">Cancel</button>
+        </div>
+        <div class="col-md-3">
+          <button mat-raised-button color="primary" type="submit"  [disabled]="!group.valid">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>  

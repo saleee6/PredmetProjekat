@@ -1,0 +1,38 @@
+<!-- <div class="row">
+    <app-reservation-list [reservationList]="loggedInUser.reservations"></app-reservation-list>
+</div> -->
+<div *ngIf="flightReservationsLoaded && vehicleReservationsLoaded">
+    <div class="mat-h2">
+        Invitations
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12">
+            <app-reservation-list [reservationList]="invitations" [type]="'invitation'"></app-reservation-list>
+        </div>
+    </div>
+    <hr>
+    <br/>
+    <div class="mat-h2">
+        Reservations
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12">
+            <app-reservation-list [reservationList]="reservations" [type]="'reservation'"></app-reservation-list>
+            <!-- <app-reservation-list [reservationList]="vehicleReservations" [type]="'reservation'"></app-reservation-list> -->
+        </div>
+    </div>
+    <hr>
+    <br/>
+    <div class="mat-h2">
+        History
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12">
+            <app-reservation-list [reservationList]="history" [type]="'history'"></app-reservation-list>
+            <!-- <app-reservation-list [reservationList]="vehicleHistory" [type]="'history'"></app-reservation-list> -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="row">
+    <table>
+        <tr>
+            <th>Brand</th>
+            <td>{{ vehicle.brand }}</td>
+        </tr>
+        <tr>
+            <th>Year</th>
+            <td>{{ vehicle.year }}</td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td>{{ vehicle.type }}</td>
+        </tr>
+        <tr>
+            <th>Seats</th>
+            <td>{{ vehicle.numOfSeats }}</td>
+        </tr>
+        <tr>
+            <th>Price Per Day</th>
+            <td>{{ (vehicle.isOnSale ? vehicle.pricePerDay - (vehicle.pricePerDay*discount/100) : vehicle.pricePerDay) | currency: 'EUR':true }}</td>
+        </tr>
+        <tr>
+            <th>Location</th>
+            <td>{{ vehicle.location }}</td>
+        </tr>
+        <tr>
+            <th>Rating</th>
+            <td>{{ vehicle.rating }}</td>
+        </tr>
+        <tr class="last">
+            <td>
+                <button 
+                    *ngIf="isAdmin && !isReserved"
+                    mat-raised-button 
+                    color="warn"
+                    (click)="onRemoveVehicle()">
+                    Remove
+                </button>
+            </td>
+            <td>
+                <button 
+                    *ngIf="isAdmin && !isReserved"
+                    mat-raised-button 
+                    color="accent"
+                    (click)="onSwapVehicle()">
+                    Swap List
+                </button>
+            </td>
+            <td>
+                <button 
+                    *ngIf="!isAdmin && checkRole()"
+                    mat-raised-button 
+                    color="primary"
+                    (click)="onReserve()">
+                    Reserve
+                </button>
+                <button 
+                    *ngIf="isAdmin && !isReserved"
+                    mat-raised-button 
+                    color="primary"
+                    type="button"
+                    (click)="onEditVehicle()">
+                    Edit
+                </button>
+            </td>
+        </tr>
+    </table>
+    <div>
+        <p *ngIf="isAdmin && isReserved">
+            This vehicle has active reservations!
+        </p>
+    </div>
+</div>

@@ -1,0 +1,152 @@
+<div class="row" *ngIf="!isEdit">
+    <h4>New Rent A Car Service</h4>
+</div>
+<div class="row">
+    <form 
+        style="margin-left: 120px;"
+        [formGroup]="addForm" 
+        (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-5">
+                <mat-form-field appearance="fill">
+                    <mat-label>Name</mat-label>
+                    <input 
+                        matInput 
+                        name="name"
+                        [formControlName]="'name'"
+                        id="name">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field appearance="fill">
+                    <mat-label>Street Address</mat-label>
+                    <input 
+                        matInput
+                        name="address" 
+                        [formControlName]="'address'"
+                        id="address">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill">
+                    <mat-label>City</mat-label>
+                    <input 
+                        matInput
+                        name="city" 
+                        [formControlName]="'city'"
+                        id="city">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill">
+                    <mat-label>State</mat-label>
+                    <input 
+                        matInput
+                        name="state" 
+                        [formControlName]="'state'"
+                        id="state">
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <button 
+                    mat-raised-button 
+                    color="primary"
+                    type="button"
+                    (click)="onVerifyAddress()">
+                    Verify Address
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <mat-form-field appearance="fill" style="width: 100%;">
+                    <mat-label>Description</mat-label>
+                    <textarea 
+                        matInput 
+                        name="description" 
+                        [formControlName]="'description'"
+                        id="description"
+                        style="height: 80px;">
+                    </textarea>
+                </mat-form-field>
+                <mat-form-field style="width: 100%;">
+                    <mat-chip-list #locationList>
+                    <mat-chip *ngFor="let location of locations" [selectable]="selectable"
+                            [removable]="removable" (removed)="onRemoveLocation(location)">
+                        {{ location }}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Locations"
+                        [formControlName]="'locations'"
+                        [matChipInputFor]="locationList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="onAddLocation($event)">
+                    </mat-chip-list>
+                </mat-form-field>
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Price for car</mat-label>
+                        <input 
+                            matInput
+                            name="car" 
+                            type="number" 
+                            [formControlName]="'car'"
+                            id="car"
+                            [min]="0">
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Price for van</mat-label>
+                        <input 
+                            matInput
+                            name="van" 
+                            type="number" 
+                            [formControlName]="'van'"
+                            id="van"
+                            [min]="0">
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Price for truck</mat-label>
+                        <input 
+                            matInput
+                            name="truck" 
+                            type="number" 
+                            [formControlName]="'truck'"
+                            id="truck"
+                            [min]="0">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-2">
+                <button 
+                    mat-raised-button 
+                    [disabled]="!isValidAddress || !addForm.valid"
+                    class="btn-success"
+                    type="submit">
+                    {{ isEdit ? 'Save' : 'Confirm'}}
+                </button>
+            </div>
+            <div class="col-md-2">
+                <button 
+                    *ngIf="isEdit"
+                    mat-raised-button 
+                    color='warn'
+                    type="button"
+                    (click)="onCancel()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

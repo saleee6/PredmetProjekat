@@ -1,0 +1,22 @@
+<!-- <div class="row">
+    <div *ngFor="let reservation of reservationList">
+        {{ reservation.type }}
+    </div>
+</div> -->
+
+<div class="container testimonial-group">
+    <div class="row text-center">
+        <div *ngFor="let reservation of reservationList" >
+            <div *ngIf="reservation.type === 'flight' || reservation.type === 'double'">
+                <a [routerLink]="['../' , reservation.reservationId, type,'flight-reservation-details']">
+                    <app-reservation-item [reservation]="reservation"></app-reservation-item>
+                </a>
+            </div>
+            <div *ngIf="reservation.type === 'vehicle'">
+                <a [routerLink]="['../' , reservation.reservationId, type,'vehicle-reservation-details']">
+                    <app-reservation-item [reservation]="reservation"></app-reservation-item>
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>

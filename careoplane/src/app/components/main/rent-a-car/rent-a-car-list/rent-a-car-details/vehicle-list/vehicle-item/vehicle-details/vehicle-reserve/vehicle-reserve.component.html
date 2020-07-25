@@ -1,0 +1,38 @@
+<div class="row">
+    <table>
+        <tr>
+            <th>Vehicle</th>
+            <td>{{ vehicle.brand }}, {{ vehicle.type }}, {{ vehicle.numOfSeats }} seats</td>
+        </tr>
+        <tr>
+            <th>From</th>
+            <td>{{ pickUpDate | date:'MM/dd/yyyy'}}, {{ vehicle.location }}</td>
+        </tr>
+        <tr>
+            <th>To</th>
+            <td>{{ returnDate | date:'MM/dd/yyyy'}}, {{ returnLocation }}</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>{{ (vehicle.isOnSale ? (rentACar.pricelist[vehicle.type] + (vehicle.pricePerDay - (vehicle.pricePerDay*discount/100)) * numOfDays) : (rentACar.pricelist[vehicle.type] + vehicle.pricePerDay * numOfDays)) | currency: 'EUR':true }}</td>
+        </tr>
+        <tr class="last">
+            <td>
+                <button 
+                    mat-raised-button 
+                    color="warn"
+                    (click)="onCancel()">
+                    Cancel
+                </button>
+            </td>
+            <td>
+                <button 
+                    mat-raised-button 
+                    class="btn-success"
+                    (click)="onReserve()">
+                    Confirm
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>

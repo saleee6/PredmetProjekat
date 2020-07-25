@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-md-2">
+        {{vehicle.rentACar}}
+    </div>
+    <div class="col-md-2">
+        {{vehicle.brand}}
+    </div>
+    <div class="col-md-1">
+        {{vehicle.type}}
+    </div>
+    <div class="col-md-1">
+        {{vehicle.numOfSeats}}
+    </div>
+    <div class="col-md-1">
+        {{vehicle.rating}}
+    </div>
+    <div class="col-md-1">
+        {{price | currency: 'EUR'}}
+    </div>
+    <div class="col-md-2">
+        <button 
+            mat-raised-button 
+            (click)="OnChoose()">
+            Choose
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button 
+            mat-raised-button
+            color="warn"
+            (click)="OnCancel()">
+            Cancel
+        </button>
+    </div>
+</div>
+<hr>

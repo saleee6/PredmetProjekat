@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-md-12">
+        <form
+            [formGroup]="discountsForm"
+            (ngSubmit)="OnSave()">
+            <div class="row">
+                <mat-form-field appearance="fill" style="width: 200px;">
+                    <mat-label>Vehicle Discount</mat-label>
+                    <input
+                        type="number"
+                        matInput
+                        name="discount1"
+                        [formControlName]="'discount1'"
+                        id="discount1">
+                    <span matSuffix>%</span>
+                    <mat-error *ngIf="discountsForm.controls['discount1'].hasError('required')">
+                        This field is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field appearance="fill" style="width: 200px;">
+                    <mat-label>Points Discount</mat-label>
+                    <input
+                        type="number"
+                        matInput
+                        name="discount2"
+                        [formControlName]="'discount2'"
+                        id="discount2">
+                    <span matSuffix>per km</span>
+                    <mat-error *ngIf="discountsForm.controls['discount2'].hasError('required')">
+                        This field is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <div class="col-md-1" *ngIf="!isEdit">
+                    <button 
+                        style="margin-left: -16px; width: 90px;"
+                        mat-raised-button 
+                        color="primary"
+                        type="button"
+                        (click)="OnEdit()">
+                        Edit Info
+                    </button>
+                </div>
+                <div class="col-md-1" *ngIf="isEdit">
+                    <button 
+                        [disabled]="discountsForm.invalid || !discountsForm.dirty"
+                        style="margin-left: -16px; width: 90px;"
+                        mat-raised-button 
+                        class="btn-success"
+                        type="submit">
+                        Save
+                    </button>
+                </div>
+                <div class="col-md-1" *ngIf="isEdit">
+                    <button
+                        style="width: 90px;"
+                        mat-raised-button 
+                        color='warn'
+                        type="button"
+                        (click)="OnCancel()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

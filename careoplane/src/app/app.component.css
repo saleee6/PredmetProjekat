@@ -1,0 +1,40 @@
+div {
+    background-color: black;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+div.scroll { 
+    height: 460px; 
+    overflow-x: hidden; 
+    overflow-x: auto; 
+    text-align:justify; 
+}
+
+::-webkit-scrollbar {
+width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+
+.main-card {
+    margin-top: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
+    scroll-margin-bottom: 25px;
+}

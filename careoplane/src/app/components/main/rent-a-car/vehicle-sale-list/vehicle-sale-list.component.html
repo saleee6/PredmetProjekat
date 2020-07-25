@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-md-8 mat-h2">
+        Do you need a vehicle to make your trip more comfortable?
+    </div>
+    <div class="col-md-2">
+        <button 
+            mat-raised-button 
+            color="primary"
+            (click)="OnYes()">
+            Yes
+        </button>
+    </div>
+</div>
+<br>
+<div class="row" *ngIf="showPicker">
+    <div class="col-md-6 mat-h3">
+        &nbsp;&nbsp;&nbsp;Just choose a return date for your rented transportation.
+    </div>
+    <div class="col-md-4">
+        <mat-form-field appearance="fill">
+            <mat-label>To Date</mat-label>
+            <input
+                (dateInput)="OnDateChange($event.value)"
+                matInput 
+                [matDatepicker]="picker" 
+                placeholder="To"
+                [min]="fromDate"
+                [max]="toDateMax"
+                id="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+    </div>
+</div>
+<br>
+<div *ngIf="showTable">
+    <div *ngIf="vehicles.length == 0" class="mat-h3">
+        &nbsp;&nbsp;&nbsp;<b>We are sorry, there are currently no vehicles for the selected dates.</b>
+    </div>
+    <div *ngIf="vehicles.length != 0">
+        <div class="row">
+            <div class="col-md-2 mat-body-strong">
+                Rent a Car
+            </div>
+            <div class="col-md-2 mat-body-strong">
+                Brand
+            </div>
+            <div class="col-md-1 mat-body-strong">
+                Type
+            </div>
+            <div class="col-md-1 mat-body-strong">
+                Seats
+            </div>
+            <div class="col-md-1 mat-body-strong">
+                Rating
+            </div>
+            <div class="col-md-1 mat-body-strong">
+                Price
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div *ngFor="let vehicle of vehicles;">
+                    <app-vehicle-sale-item 
+                    [location]='location' 
+                    [fromDate]='fromDate' 
+                    [toDate]='toDate' 
+                    [vehicle]="vehicle" 
+                    [discount]="discount" 
+                    [numberOfDays]="numberOfDays">
+                </app-vehicle-sale-item>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<mat-card style="margin-right: 15px; margin-bottom: 15px; margin-top: 5px; margin-left: 5px;height: 150px;">
+    <div class="row">
+        <div class="col-md-5">
+            <h4>
+                <div *ngIf="reservation.type != 'duoble'">
+                    <mat-icon *ngIf="reservation.type === 'vehicle'">directions_car</mat-icon>
+                    <mat-icon *ngIf="reservation.type === 'flight'">flight</mat-icon>
+                </div>
+                <div *ngIf="reservation.type === 'double'">
+                    <mat-icon >directions_car</mat-icon>
+                    <mat-icon >flight</mat-icon>
+                </div>
+            </h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <table>
+                <tr>
+                    <td>{{ fromLocation }}</td>
+                    <td><mat-icon>{{arrow}}</mat-icon></td>
+                    <td>{{ toLocation }}</td>
+                </tr>
+                <tr>
+                    <td>{{ fromDate | date: 'dd/MM/yyyy' }}</td>
+                    <td><mat-icon>arrow_right_alt</mat-icon></td>
+                    <td>{{ toDate | date: 'dd/MM/yyyy' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</mat-card>

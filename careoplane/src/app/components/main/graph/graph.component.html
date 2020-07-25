@@ -1,0 +1,110 @@
+<mat-tab-group>
+    <mat-tab label="Sales">
+        <div class="mat-elevation-z4" style="margin: 16px; padding: 16px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Type</mat-label>
+                        <mat-select 
+                            name="type"
+                            id="type"
+                            [(ngModel)]="type" 
+                            (ngModelChange)="onTypeSelection()">
+                            <mat-option *ngFor="let type of graphTypes" [value]="type">
+                            {{type}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Select date</mat-label>
+                        <input 
+                            (dateInput)="OnDateChange($event.value)"
+                            matInput 
+                            [(ngModel)] = "datePickerValue"
+                            [matDatepicker]="picker" 
+                            placeholder="Select date"
+                            id="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <jqxChart 
+                        #myChart
+                        [width]="getWidth()" [height]="500"
+                        [title]="'Reservations'"
+                        [description]="'Select a date to view number of reservations'"
+                        [showLegend]="false" [enableAnimations]="true" [padding]="padding"
+                        [titlePadding]="titlePadding" [source]="sampleData" [xAxis]="xAxis"
+                        [valueAxis]="valueAxis" [seriesGroups]="seriesGroups" [colorScheme]="'scheme01'">
+                    </jqxChart>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Earnings">
+        <div class="mat-elevation-z4" style="margin: 16px; padding: 16px;">
+            <div class="row">
+                <div class="col-md-12">
+                    <form 
+                    [formGroup]="searchForm" 
+                    class="form-inline"
+                    (ngSubmit)="onSearch()">
+                        <div class="col-md-4">
+                            <mat-form-field appearance="fill">
+                                <mat-label>From</mat-label>
+                                <input 
+                                    matInput 
+                                    [matDatepicker]="pickerFrom" 
+                                    placeholder="From"
+                                    id="pickerFrom"
+                                    [formControlName]="'pickerFrom'">
+                                <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFrom></mat-datepicker>
+                                <mat-error *ngIf="fromDateFormControl.invalid">
+                                    From date is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field appearance="fill">
+                                <mat-label>To</mat-label>
+                                <input 
+                                    matInput 
+                                    [matDatepicker]="pickerTo" 
+                                    placeholder="To"
+                                    id="pickerTo"
+                                    [formControlName]="'pickerTo'"
+                                    [min]="minToDate">
+                                <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerTo></mat-datepicker>
+                                <mat-error *ngIf="searchForm.controls['pickerTo'].hasError('required')">
+                                    To date is <strong>required</strong>
+                                </mat-error>
+                                <mat-error *ngIf="toDateFormControl.invalid">
+                                    To date must be greater or equal to from date
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                            <button 
+                                [disabled]="!searchForm.valid"
+                                mat-raised-button 
+                                style="width: 150px; height: 50px; margin-top: -20px;"
+                                type="submit">
+                                Check
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row" *ngIf="isSearched" style="padding: 32px;">
+                <div class="mat-h2">{{ profitText }}</div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

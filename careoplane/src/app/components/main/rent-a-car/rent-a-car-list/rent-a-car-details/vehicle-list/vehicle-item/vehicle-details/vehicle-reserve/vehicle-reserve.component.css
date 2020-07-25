@@ -1,0 +1,7 @@
+tr {
+    border-bottom: 1px dotted black;
+}
+
+tr.last {
+    border-bottom: none;
+}

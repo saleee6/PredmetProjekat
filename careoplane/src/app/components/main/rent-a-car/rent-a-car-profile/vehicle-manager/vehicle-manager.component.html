@@ -1,0 +1,134 @@
+<form 
+    [formGroup]="addForm" 
+    (ngSubmit)="onSubmit()">
+    <div class="row" *ngIf="!isEdit">
+        <div class="col-md-5">
+            <mat-form-field appearance="fill">
+                <mat-label>Brand</mat-label>
+                <input 
+                    matInput 
+                    name="brand"
+                    [formControlName]="'brand'"
+                    id="brand">
+                    <mat-error *ngIf="addForm.controls['brand'].hasError('required')">
+                        Brand is <strong>required</strong>
+                    </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-md-5">
+            <mat-form-field appearance="fill">
+                <mat-label>Seats</mat-label>
+                <input 
+                    matInput
+                    name="seats" 
+                    type="number" 
+                    [formControlName]="'seats'"
+                    id="seats"
+                    [min]="1">
+                    <mat-error *ngIf="addForm.controls['seats'].hasError('required')">
+                        Number of seats is <strong>required</strong>
+                    </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row" *ngIf="!isEdit">
+        <div class="col-md-5">
+            <mat-form-field appearance="fill">
+                <mat-label>Type</mat-label>
+                <mat-select 
+                    name="type"
+                    id="type"
+                    [formControlName]="'type'">
+                    <mat-option *ngFor="let type of vehicleTypes" [value]="type">
+                    {{type}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="addForm.controls['type'].hasError('required')">
+                    Type is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-md-5">
+            <mat-form-field appearance="fill">
+                <mat-label>Year</mat-label>
+                <input 
+                    matInput
+                    name="year" 
+                    type="number" 
+                    [formControlName]="'year'"
+                    id="year"
+                    pattern="\d{4}"
+                    maxlength="4"
+                    [min]="1900">
+                    <mat-error *ngIf="addForm.controls['year'].hasError('required')">
+                        Year is <strong>required</strong>
+                    </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <mat-form-field appearance="fill">
+                <mat-label>Price Per Day</mat-label>
+                <input 
+                    matInput
+                    name="price" 
+                    type="number" 
+                    [formControlName]="'price'"
+                    style="text-align: right;"
+                    id="price"
+                    min="0">
+                <span matPrefix>€&nbsp;</span>
+                <span matSuffix>.00</span>
+                <mat-error *ngIf="addForm.controls['price'].hasError('required')">
+                    Price per day is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-md-5">
+            <mat-form-field appearance="fill">
+                <mat-label>Location</mat-label>
+                <mat-select 
+                    name="location"
+                    id="location"
+                    [formControlName]="'location'">
+                    <mat-option *ngFor="let location of locations" [value]="location">
+                    {{location}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="addForm.controls['location'].hasError('required')">
+                    Location is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <button
+                mat-raised-button  
+                color="warn"
+                type="button"
+                (click)="onCancel()">
+                Cancel
+            </button>
+        </div>
+        <div class="col-md-5">
+            <button 
+                *ngIf="!isEdit"
+                [disabled]="!addForm.valid"
+                mat-raised-button 
+                class="btn-success"
+                type="submit">
+                Add
+            </button>
+            <button 
+                *ngIf="isEdit"
+                [disabled]="!addForm.valid"
+                mat-raised-button 
+                class="btn-success"
+                type="submit">
+                Save
+            </button>
+        </div>
+    </div>
+</form>

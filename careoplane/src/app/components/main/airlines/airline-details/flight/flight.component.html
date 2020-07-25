@@ -1,0 +1,115 @@
+<div class="row">
+    <div class="col-md-1">
+        <div matTooltip="{{flight.airlineName}}"> 
+            <a [routerLink]="[backStr,flight.airlineName, 'details']">
+                <app-airline [image]="airlineService.images[flight.airlineName]" [name]="flight.airlineName"></app-airline>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-2 flight">
+        <div class="mat-h3">
+            {{flight.origin}}
+        </div>
+        <div class="mat-h3">
+            {{flight.departure | date:'dd.MM.yyyy HH:mm'}}
+        </div>
+    </div>
+    <div class="col-md-4 flight">
+        <div class="mat-body-strong">
+            {{flight.durationHours}} h {{flight.durationMinutes}} min ({{flight.distance}} km)
+        </div>
+        <div class="row">
+            <div class="col-md-2  flight">
+                <mat-icon>flight_takeoff</mat-icon>
+            </div>
+            <div class="col-md-8 flight">
+                <hr style="border: 1px solid black;"/>
+            </div>
+            <div class="col-md-2 flight">
+                <mat-icon>flight_land</mat-icon>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md" *ngIf="flight.conCount === 0">
+                <div class="mat-small">
+                    Direct
+                </div>
+            </div>
+            <div class="col-md" *ngIf="flight.conCount !== 0">
+                <div class="mat-small">
+                    Stops: {{flight.conCount}}
+                </div>
+            </div>
+            <div class="col-md" *ngFor="let connection of flight.connections">
+                <div class="mat-small">
+                    {{connection.value}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 flight">
+        <div class="mat-h3">
+            {{flight.destination}}
+        </div>
+        <div class="mat-h3">
+            {{flight.arrival | date:'dd.MM.yyyy HH:mm'}}
+        </div>
+    </div>
+    <div class="col-md-3 flight">
+        <div class="row" *ngIf="admin">
+            <div class="mat-h3">
+                {{flight.rating}} / 5
+            </div>
+        </div>
+        <div class="row">
+            <div class="mat-h3" *ngIf="classType !== 'any' && fastTicket == null">
+                {{price | currency: 'EUR'}}
+            </div>
+            <div class="mat-h3" *ngIf="classType === 'any' && fastTicket == null">
+                {{flight.prices[2] | currency: 'EUR'}} - {{flight.prices[0] | currency: 'EUR'}}
+            </div>
+        </div>
+        <div class="row" *ngIf="fastTicket != null">
+            <div class="col-md">
+                <div class="mat-h3">
+                    Seat: {{fastTicket.seat.name}}
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="mat-h3">
+                    <del>{{fastTicket.seat.price | currency: 'EUR'}}</del>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="mat-h3" >
+                    <strong style="color: #E91E63;">{{fastTicket.newPrice | currency: 'EUR'}}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="checkRole() && CheckDate()">
+            <button mat-raised-button color="primary" style="margin: 0 auto;" (click)="Reserve()" *ngIf="!admin && fastTicket == null && !roundTrip">
+                Reserve
+            </button>
+            <button mat-raised-button color="primary" style="margin: 0 auto;" (click)="FastReservation()" *ngIf="fastTicket != null && !admin">
+                Reserve
+            </button>
+            <button mat-raised-button color="primary" style="margin: 0 auto;" (click)="Edit()" *ngIf="admin && fastTicket == null">
+                Edit flight
+            </button>
+            <button mat-raised-button color="primary" style="margin: 0 auto;" (click)="EditSeats()" *ngIf="admin && fastTicket == null">
+                Edit seats
+            </button>
+            <button mat-raised-button color="primary" style="margin: 0 auto;" (click)="EditFastReservation()" *ngIf="admin && fastTicket != null">
+                Edit
+            </button>
+            <button mat-mini-fab color="warn" style="margin: 0 auto;" (click)="DeleteFastReservation()" *ngIf="fastTicket != null && admin">
+                <mat-icon>delete</mat-icon>
+            </button>
+            <div *ngIf="fastTicket == null && admin">
+                <button mat-mini-fab color="warn" style="margin: 0 auto;" (click)="DeleteFlight()" *ngIf="seatsValid">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

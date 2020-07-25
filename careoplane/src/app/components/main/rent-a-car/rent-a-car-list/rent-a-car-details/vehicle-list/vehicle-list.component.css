@@ -1,0 +1,37 @@
+table {
+    width: 100%;
+}  
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+mat-form-field {
+    width: 150px;
+}
+
+div.scroll { 
+    height: 440px; 
+    overflow-x: hidden; 
+    overflow-x: auto; 
+    text-align:justify; 
+}
+
+::-webkit-scrollbar {
+width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #555;
+}

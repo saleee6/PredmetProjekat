@@ -1,0 +1,47 @@
+<div class="row" *ngIf="notCombined">
+    <a 
+        [routerLink]="['../../../', 'reservations']"
+        routerLinkActive="active"
+        mat-mini-fab >
+        <mat-icon>arrow_back</mat-icon>
+    </a>
+</div>
+<br>
+<br>
+<div class="row" *ngIf="type === 'reservation' && canCancel && notCombined">
+    <div class="col-md">
+        <button mat-raised-button color="warn" (click)="OnCancel()">Cancel</button>
+    </div>
+</div>
+<hr>
+<div class="row mat-h2">
+    {{ rentACarName }}
+</div>
+<br>
+<div class="row mat-h3">
+    <div class="col-md-2">
+        {{ vehicle.brand }}
+    </div>
+    <div class="col-md-2">
+        {{ reservation.price | currency: 'EUR' }}
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md" style="display: flex; align-items: center;">
+        {{reservation.fromLocation}}&nbsp;&nbsp;
+        ({{reservation.fromDate | date: 'dd/MM/yyyy'}})&nbsp;&nbsp;&nbsp;&nbsp;
+        <mat-icon>arrow_right_alt</mat-icon>&nbsp;&nbsp;
+        {{reservation.toLocation}}&nbsp;&nbsp;&nbsp;&nbsp;
+        ({{reservation.toDate | date: 'dd/MM/yyyy'}})
+    </div>
+</div>
+<br>
+<div class="row" *ngIf="type === 'history'">
+    <div class="col-md-2" *ngIf="!reservation.isVehicleRated">
+        <button mat-raised-button color="primary" (click)="RateVehicle()">Rate Vehicle</button>&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div class="col-md-2" *ngIf="!reservation.isRentACarRated">
+        <button mat-raised-button color="primary" (click)="RateRentACar()">Rate Rent A Car</button>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+<a (click)="Back()"
+    mat-mini-fab *ngIf="!admin">
+    <mat-icon>arrow_back</mat-icon>
+</a>
+<br/>
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="row">
+                    <img class="images" [src]="createImgPath(airline.picture)" alt={{airline.name}} *ngIf="showImage">
+                </div>
+                <br>
+                <div class="row" *ngIf="admin">
+                    <div class="col-md">
+                        <button
+                        style="width: 100px;"
+                        mat-raised-button 
+                        color="primary"
+                        (click)="onEdit()">
+                        Edit Info
+                        </button>
+                    </div>
+                </div>
+                <div class="row" *ngIf="admin">
+                    <div class="col-md">
+                        <br>
+                        <button
+                        style="width: 100px;"
+                        mat-raised-button 
+                        color="primary"
+                        (click)="AddFlight()">
+                        Add Flight
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="row" style="height: 75px;">
+                    <div class="col-md-8">
+                        <div class="mat-display-2">
+                            {{airline.name}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mat-h2">
+                            Rating {{airline.rating}} / 5
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 250px;">
+                    <div class="col-md-6">
+                        <div class="mat-h2">
+                            {{airline.description}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row" style="height: 225px;">
+                            <div class="col-md-12">
+                                <div #mapContainer id="map"></div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row" style="height: 25;">
+                            <div class="col-md-12">
+                                <div class="mat-h2">
+                                    {{airline.address}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Destinations
+              </mat-panel-title>
+              <mat-panel-description>
+                <mat-icon>location_city</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+                <div class="row">
+                    <div class="mat-h2" *ngFor="let destination of airline.destinations; let i = last">
+                        {{destination.value}}{{i ? ' ': ','}}&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+          </mat-expansion-panel>
+    </div>
+</div>
+<br/>
+<br/>
+
+<mat-tab-group>
+    <mat-tab label="Flights">
+        <div class="example-large-box mat-elevation-z4">
+            <app-airlines-list style="width: 100%;" [singleAirline]="true" *ngIf="!admin"></app-airlines-list>
+            <app-admin-flights style="width: 100%;" [admin]="admin" *ngIf="admin">
+            </app-admin-flights>
+        </div>
+    </mat-tab>
+    <mat-tab label="Cheap Tickets">
+        <div class="example-large-box mat-elevation-z4">
+            <app-airline-fast-tickets style="width: 100%;" [airline]="airline" [back]="'two'" [admin]="admin"></app-airline-fast-tickets>
+        </div>
+    </mat-tab>
+</mat-tab-group>

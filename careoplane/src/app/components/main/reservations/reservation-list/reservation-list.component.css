@@ -1,0 +1,5 @@
+.testimonial-group > .row {
+    overflow: auto;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+  }

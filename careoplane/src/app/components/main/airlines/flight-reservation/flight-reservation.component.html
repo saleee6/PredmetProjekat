@@ -1,0 +1,192 @@
+<a 
+  [routerLink]="['../../../']"
+  routerLinkActive="active"
+  mat-mini-fab >
+  <mat-icon>arrow_back</mat-icon>
+</a>
+<br/>  
+<mat-horizontal-stepper [linear]="true" #stepper>
+  <mat-step [stepControl]="firstfirstFormGroup">
+    <ng-template matStepLabel>Enter passenger/s information</ng-template>
+      <form [formGroup]="firstfirstFormGroup">
+        <div formArrayName="passengerChoiceControl">
+          <div *ngFor="let passenger of getChoiceList(); let i = index" [formGroupName]="i">
+            <hr/>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="mat-h3" style="margin-top: 15px;">
+                  Chose a friend or yourself
+                </div>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance="fill">
+                  <mat-label>Username</mat-label>
+                  <mat-select [formControlName]="'username'">
+                    <mat-option *ngFor="let friend of friends" [value]="friend">
+                      {{friend}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="mat-h3" style="margin-top: 15px;">
+                  Or enter passengers information
+                </div>
+              </div>
+              <div class="col-md">
+                <div formGroupName="full name">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Name</mat-label>
+                        <input matInput [formControlName]="'name'">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Surname</mat-label>
+                        <input matInput [formControlName]="'surname'">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Passport</mat-label>
+                        <input matInput [formControlName]="'passport'">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>  
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <button mat-button matStepperNext color="primary" (click)="CreatePassengerList()" [disabled]="CheckFirstStep()">Next</button>
+  </mat-step>
+
+  <mat-step [stepControl]="firstFormGroup">
+    <ng-template matStepLabel>Choose seats</ng-template>
+    <hr>
+    <app-seat-selector [type]="classType" [num]="1"></app-seat-selector>
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button matStepperNext color="primary" [disabled]="checked" >Next</button>
+  </mat-step>
+  
+  <mat-step [stepControl]="secondFormGroup">
+    <ng-template matStepLabel>Passenger/s seat/s</ng-template>
+      <hr>
+      <form [formGroup]="secondFormGroup">
+        <div formArrayName="passengersControl">
+          <div *ngFor="let passenger of getList(); let i = index" [formGroupName]="i">
+            <div class="row">
+              <div class="col-md-1">
+                <mat-form-field appearance="fill" style="width: 50px;">
+                  <mat-label>Seat</mat-label>
+                  <input matInput [disabled]="true" [formControlName]="'id'">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2">
+                <mat-form-field appearance="fill">
+                  <mat-label>Passenger</mat-label>
+                  <mat-select [formControlName]="'passenger'">
+                    <mat-option *ngFor="let passenger of passengersList" [value]="passenger">
+                      {{passenger.username}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext color="primary" (click)="CalculatePrice()" [disabled]="CheckSecondStep()">Next</button>
+  </mat-step>
+
+  <div *ngIf="secondFlight">
+    <mat-step [stepControl]="thirdFormGroup">
+      <ng-template matStepLabel>Choose seats</ng-template>
+      <hr>
+      <app-seat-selector [type]="classType" [num]="2"></app-seat-selector>
+      <button mat-button matStepperNext color="primary" [disabled]="checked2" >Next</button>
+    </mat-step>
+    
+    <mat-step [stepControl]="fourthFormGroup">
+      <ng-template matStepLabel>Passenger/s seat/s</ng-template>
+        <hr>
+        <form [formGroup]="fourthFormGroup">
+          <div formArrayName="passengersControl">
+            <div *ngFor="let passenger of getList2(); let i = index" [formGroupName]="i">
+              <div class="row">
+                <div class="col-md-1">
+                  <mat-form-field appearance="fill" style="width: 50px;">
+                    <mat-label>Seat</mat-label>
+                    <input matInput [disabled]="true" [formControlName]="'id'">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Passenger</mat-label>
+                    <mat-select [formControlName]="'passenger'">
+                      <mat-option *ngFor="let passenger of passengersList" [value]="passenger">
+                        {{passenger.username}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+  
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext (click)="CalculatePrice()" color="primary" [disabled]="CheckFourthStep()">Next</button>
+    </mat-step>
+  </div>
+
+  <mat-step>
+    <ng-template matStepLabel>Reserve Vehicle</ng-template>
+    <hr>
+    <div class="mat-h2" *ngIf="rentACar != null">
+      <strong>You have chosen {{vehicle.brand}} from {{rentACar.name}}</strong>
+    </div>
+    <br/>
+    <app-vehicle-sale-list [location]='flight1 == null ? "" : flight1.destination' [fromDate]='flight1 == null ? toDate : flight1.arrival' [toDate]='flight2 == null ? toDate : flight2.departure' [toDateMax]='flight2 == null ? toDate : flight2.departure'></app-vehicle-sale-list>
+
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button matStepperNext (click)="CalculatePrice()" color="primary">Next</button>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <div class="mat-h2">
+      <div class="row">
+        You are now done
+      </div>
+      <div class="row">
+        <div class="col-md-5" *ngIf="showPoints">
+          Final price is {{finalPrice | currency: 'EUR'}}
+        </div>
+        <div class="col-md-5" *ngIf="!showPoints">
+          Final price is <del>{{oldPrice | currency: 'EUR'}}</del>&nbsp;&nbsp;<strong style="color: #E91E63;">{{finalPrice | currency: 'EUR'}}</strong>
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-3" *ngIf="showPoints">
+          <button mat-raised-button color="accent" (click)="UsePoints()" style="width: 100px;">Use Points</button>
+        </div>
+        <div class="col-md-3" *ngIf="!showPoints">
+          <button mat-raised-button color="warn" (click)="CancelUsePoints()" style="width: 100px;">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset(); Reset()">Reset</button>
+      <button mat-raised-button color="primary" (click)="Done()"> Done </button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

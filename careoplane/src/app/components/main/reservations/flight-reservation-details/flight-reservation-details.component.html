@@ -1,0 +1,107 @@
+<div class="row" *ngIf="!unauthenticatedUser">
+    <a 
+        [routerLink]="['../../../', 'reservations']"
+        routerLinkActive="active"
+        mat-mini-fab >
+        <mat-icon>arrow_back</mat-icon>
+    </a>
+</div>
+<div class="row" *ngIf="unauthenticatedUser">
+    <a 
+        [routerLink]="['../']"
+        routerLinkActive="active"
+        mat-mini-fab >
+        <mat-icon>arrow_back</mat-icon>
+    </a>
+</div>
+<br>
+<br>
+<div *ngIf="expired">
+    This invitation has expired
+</div>
+<div *ngIf="!expired && reservation != null" class="mat-h4">
+    <div class="row" *ngIf="type==='invitation'">
+        <div class="col-md-2">
+            <button mat-raised-button color="primary" (click)="Accept()" style="width: 100px;">Accept</button>&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        <div class="col-md-2">
+            <button mat-raised-button color="warn" (click)="Cancel()" style="width: 100px;">Decline</button>
+        </div>
+    </div>
+    <div class="row" *ngIf="type==='reservation' && canCancel">
+        <div class="col-md-2" *ngIf="isPassenger">
+            <button mat-raised-button color="warn" (click)="Cancel()" style="width: 100px;">Cancel</button>
+        </div>
+        <div class="col-md-2" *ngIf="creator">
+            <button mat-raised-button color="warn" (click)="CancelAll()" style="width: 100px;">Cancel All</button>
+        </div>
+    </div>
+    <br/>
+    <div *ngFor="let details of reservation.flightReservationDetails; let i = index">
+        <div *ngIf="i != 0">
+            <hr/>
+            <br/>
+        </div>
+        <div class="row mat-h2">
+            Flight {{i + 1}}.
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-1  mat-h3">
+                {{details.flight.airlineName}}
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md" style="display: flex; align-items: center;">
+                {{details.flight.origin}}&nbsp;&nbsp;
+                ({{details.flight.departure | date: 'medium'}})&nbsp;&nbsp;&nbsp;&nbsp;
+                <mat-icon>arrow_right_alt</mat-icon>&nbsp;&nbsp;
+                {{details.flight.destination}}&nbsp;&nbsp;&nbsp;&nbsp;
+                ({{details.flight.arrival | date: 'medium'}})
+            </div>
+        </div>
+        <br/>
+        <div class="col-md-1"></div>
+        <div class="row mat-h2">
+            Passengers
+        </div>
+        <hr/>
+        <div *ngFor="let passenger of details.passengerSeats">
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md">
+                    <div *ngIf="passenger.username != null && passenger.username != ''">
+                        {{passenger.username}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div *ngIf="passenger.username == null || passenger.username == ''">
+                        {{passenger.name}}  {{passenger.surname}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                        {{passenger.seat.name}}&nbsp;&nbsp;{{passenger.seat.price | currency:'EUR'}}
+                </div>
+                <div class="col-md">
+                    <div *ngIf="passenger.username == username && !flightScored[i] && type==='history'">
+                        <button mat-raised-button color="primary" (click)="ScoreFlight(details.flight.flightId, passenger.passengerSeatId, i)">
+                            Rate Flight
+                        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div *ngIf="passenger.username == username && !airlineScored[i] && type==='history'">
+                        <button mat-raised-button color="primary" (click)="ScoreAirline(details.flight.airlineName, passenger.passengerSeatId, i)">
+                            Rate Airline
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+        </div>
+    </div>
+    <div *ngIf="reservation != null">
+        <div *ngIf="reservation.vehicleReservationId != 0">
+            <app-vehicle-reservation-details [id]="reservation.vehicleReservationId" [type]="type"></app-vehicle-reservation-details>
+        </div>
+    </div>
+    <br/>
+    <div class="mat-h2">
+        <strong>Final price is {{reservation.finalPrice | currency: 'EUR'}}</strong>
+    </div>
+</div>

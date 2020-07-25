@@ -1,0 +1,143 @@
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <form 
+            [formGroup]="searchForm" 
+            class="form-inline"
+            (ngSubmit)="onSearch()">
+            <div class="col-md-2">
+                <mat-form-field appearance="fill">
+                    <mat-label>Name</mat-label>
+                    <input 
+                        onClick="this.select();"
+                        matInput 
+                        name="name"
+                        id="name"
+                        [formControlName]="'name'">
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field appearance="fill">
+                    <mat-label>Location</mat-label>
+                    <input 
+                        onClick="this.select();"
+                        matInput 
+                        name="location"
+                        [formControlName]="'locations'"
+                        id="location">
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field appearance="fill">
+                    <mat-label>Pick up date</mat-label>
+                    <input 
+                        matInput 
+                        [matDatepicker]="pickerPickUp" 
+                        placeholder="Pick up date"
+                        id="pickerPickUp"
+                        [formControlName]="'pickerPickUp'"
+                        [min]="minPickUpDate">
+                    <mat-datepicker-toggle matSuffix [for]="pickerPickUp"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerPickUp></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field appearance="fill">
+                    <mat-label>Return date</mat-label>
+                    <input 
+                        matInput 
+                        [matDatepicker]="pickerReturn" 
+                        placeholder="Return date"
+                        id="pickerReturn"
+                        [formControlName]="'pickerReturn'"
+                        [min]="minReturnDate">
+                    <mat-datepicker-toggle matSuffix [for]="pickerReturn"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerReturn></mat-datepicker>
+                    <mat-error *ngIf="returnDateFormControl.invalid">
+                        Return date must be greater or equal than pick up date
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <button 
+                    [disabled]="!searchForm.dirty || searchForm.invalid"
+                    mat-raised-button 
+                    style="width: 150px; height: 50px; margin-top: -20px;"
+                    type="submit">
+                    Search
+                </button>
+            </div>
+            <div class="col-md-2">
+                <button
+                    *ngIf="searchPerformed" 
+                    mat-mini-fab 
+                    color="warn"
+                    style="margin-top: -20px;"
+                    type="button"
+                    (click)="onCancelSearch()">
+                    X
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<div class="mat-elevation-z8">
+    <table 
+        matSort 
+        (matSortChange)="sortData($event)"
+        mat-table [dataSource]="dataSource" 
+        >
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td 
+                mat-cell 
+                *matCellDef="let element; 
+                let i = index">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="locations">
+            <th mat-header-cell *matHeaderCellDef> Locations </th>
+            <td mat-cell *matCellDef="let element"> {{element.locations}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="rating">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Rating </th>
+            <td mat-cell *matCellDef="let element"> {{element.rating}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef> Details </th>
+            <td mat-cell *matCellDef="let element"> 
+                <a class="clearfix"
+                style="cursor: pointer; color: black;"
+                [routerLink]="['../', rentACars.indexOf(element), 'details']"
+                routerLinkActive="active"><mat-icon style="transform: scaleX(-1)">more</mat-icon></a>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator 
+        #paginator
+        [length]="length"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage"
+        (page)="handlePage($event)">
+    </mat-paginator>
+</div>
+<!-- <div class="row scroll" style="height: 420px;">
+    <div class="col-md-12">
+        <app-rent-a-car-item
+            class="list-group-item" 
+            *ngFor="let rentACarEl of rentACars 
+            | filter:filteredName:'name'
+            | filter:filteredLocation:'locations'
+            ; let i = index"
+            [rentACar]="rentACarEl"
+            [index]="rentACars.indexOf(rentACarEl)">
+        </app-rent-a-car-item>
+    </div>
+</div> -->

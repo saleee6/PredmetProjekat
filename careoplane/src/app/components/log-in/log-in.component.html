@@ -1,0 +1,94 @@
+<h2 mat-dialog-title>Welcome to Careoplane</h2>
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-md-12">
+            <form 
+                [formGroup]="logInForm" 
+                (ngSubmit)="onLogin()">
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Email/Username</mat-label>
+                            <input
+                                matInput
+                                name="usermail"
+                                [formControlName]="'usermail'"
+                                id="usermail">
+                            <mat-error *ngIf="logInForm.controls['usermail'].hasError('required')">
+                                Email/username is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Password</mat-label>
+                            <input
+                                matInput 
+                                [type]="hide ? 'password' : 'text'"
+                                name="password"
+                                [formControlName]="'password'"
+                                id="password">
+                                <button 
+                                    mat-icon-button 
+                                    type="button"
+                                    matSuffix 
+                                    (click)="hide = !hide" 
+                                    [attr.aria-label]="'Hide password'" 
+                                    [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                <mat-error *ngIf="logInForm.controls['password'].hasError('required')">
+                                    Password is <strong>required</strong>
+                                </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button mat-raised-button type="button" tabindex="-1" mat-dialog-close="false">Cancel</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button mat-raised-button type="submit" [disabled]="logInForm.invalid">Log In</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <button 
+                type="button"
+                style="width: 190px; margin-left: 5px;" 
+                (click)="LoginWithGoogle()" 
+                mat-flat-button 
+                color="primary">
+                <img src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Google-512.png" 
+                    width="22" 
+                    height="22">
+                Log In with Google
+            </button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <button 
+                type="button" 
+                style="width: 190px; margin-left: 5px;"
+                (click)="logInWithFB()" 
+                mat-flat-button 
+                color="primary">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" 
+                    width="22" 
+                    height="22">
+                Log In with Facebook
+            </button>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    
+</mat-dialog-actions>

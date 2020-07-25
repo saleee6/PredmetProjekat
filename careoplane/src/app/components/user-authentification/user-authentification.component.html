@@ -1,0 +1,306 @@
+<div class="row">
+    <div class="col-md-12">
+    <form
+        *ngIf="isAddAdmin"
+        [formGroup]="addForm"
+        (ngSubmit)="onAdd()">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Email *</mat-label>
+                            <input
+                                matInput
+                                placeholder="address@example.com"
+                                name="email"
+                                [formControlName]="'email'"
+                                id="email">
+                            <mat-icon matSuffix>email</mat-icon>
+                            <mat-error *ngIf="addForm.controls['email'].hasError('required')">
+                                Email is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Type *</mat-label>
+                            <mat-select 
+                                name="type"
+                                id="type"
+                                [formControlName]="'type'">
+                                <mat-option *ngFor="let type of adminType" [value]="type">
+                                {{type}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <button 
+                        [disabled]="addForm.invalid || !addForm.dirty"
+                        style="margin-left: 225px;"
+                        mat-raised-button 
+                        class="btn-success"
+                        type="submit">
+                        Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form 
+        *ngIf="!isAddAdmin"
+        style="margin-left: 420px;"
+        [formGroup]="registerForm" 
+        (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Account Data</h1>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Username *</mat-label>
+                            <input
+                                matInput
+                                name="username"
+                                [formControlName]="'username'"
+                                id="username">
+                            <mat-icon matSuffix>person</mat-icon>
+                            <mat-error *ngIf="registerForm.controls['username'].hasError('required')">
+                                Username is <strong>required</strong>
+                            </mat-error>
+                            <mat-error *ngIf="registerForm.controls['username'].hasError('pattern')">
+                                Username <strong>must</strong> contain only letters and numbers
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Email *</mat-label>
+                            <input
+                                matInput
+                                placeholder="address@example.com"
+                                name="email"
+                                [formControlName]="'email'"
+                                id="email">
+                            <mat-icon matSuffix>email</mat-icon>
+                            <mat-error *ngIf="registerForm.controls['email'].hasError('required')">
+                                Email is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" *ngIf="isEdit">
+                    <div class="col-md-5">
+                        <button
+                            [hidden]="isChangePassword"
+                            mat-raised-button 
+                            color="primary"
+                            type="button"
+                            (click)='isChangePassword = true'>
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+                <div class="row" [hidden]="!isChangePassword" *ngIf="isEdit">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Old Password *</mat-label>
+                            <input
+                                matInput 
+                                [formControlName]="'oldPassword'"
+                                [type]="hide3 ? 'password' : 'text'"
+                                name="password"
+                                id="password">
+                                <button 
+                                    mat-icon-button 
+                                    type="button"
+                                    matSuffix 
+                                    (click)="hide3 = !hide3" 
+                                    [attr.aria-label]="'Hide password'" 
+                                    [attr.aria-pressed]="hide3">
+                                    <mat-icon>{{hide3 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            <!-- <mat-error *ngIf="registerForm.controls['username'].hasError('required')">
+                                Old password is <strong>required</strong>
+                            </mat-error> -->
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" [hidden]="!isChangePassword">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>{{isChangePassword ? 'New Password *' : 'Password *'}}</mat-label>
+                            <input
+                                matInput 
+                                [type]="hide1 ? 'password' : 'text'"
+                                name="password"
+                                [formControlName]="'password'"
+                                id="password">
+                                <button 
+                                    mat-icon-button 
+                                    type="button"
+                                    matSuffix 
+                                    (click)="hide1 = !hide1" 
+                                    [attr.aria-label]="'Hide password'" 
+                                    [attr.aria-pressed]="hide1">
+                                    <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            <mat-error *ngIf="registerForm.controls['password'].hasError('required')">
+                                Password is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" [hidden]="!isChangePassword">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Confirm Password *</mat-label>
+                            <input
+                                matInput 
+                                [type]="hide2 ? 'password' : 'text'"
+                                name="confirmPassword"
+                                [formControlName]="'confirmPassword'"
+                                id="confirmPassword">
+                                <button 
+                                    mat-icon-button 
+                                    type="button"
+                                    matSuffix 
+                                    (click)="hide2 = !hide2" 
+                                    [attr.aria-label]="'Hide password'" 
+                                    [attr.aria-pressed]="hide2">
+                                    <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            <mat-error *ngIf="registerForm.controls['confirmPassword'].hasError('required')">
+                                Password confirmation is <strong>required</strong>
+                            </mat-error>
+                            <mat-error *ngIf="registerForm.get('confirmPassword').errors && 
+                            registerForm.get('confirmPassword').errors.ConfirmPassword">
+                                Passwords do <strong>not</strong> match
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" *ngIf="!isAdmin">
+                <h1>User Data</h1>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Name *</mat-label>
+                            <input 
+                                matInput 
+                                name="name"
+                                [formControlName]="'name'"
+                                id="name">
+                            <mat-error *ngIf="registerForm.controls['name'].hasError('required')">
+                                Name is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Surname *</mat-label>
+                            <input 
+                                matInput 
+                                name="surname"
+                                [formControlName]="'surname'"
+                                id="surname">
+                            <mat-error *ngIf="registerForm.controls['surname'].hasError('required')">
+                                Surname is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>City *</mat-label>
+                            <input 
+                                matInput
+                                name="city" 
+                                [formControlName]="'city'"
+                                id="city">
+                            <mat-icon matSuffix>home</mat-icon>
+                        <mat-error *ngIf="registerForm.controls['city'].hasError('required')">
+                            City is <strong>required</strong>
+                        </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-form-field appearance="fill" style="width: 200px;">
+                            <mat-label>Phone Number *</mat-label>
+                            <input 
+                                matInput
+                                name="phone" 
+                                [formControlName]="'phone'"
+                                id="phone">
+                            <mat-icon matSuffix>phone</mat-icon>
+                        <mat-error *ngIf="registerForm.controls['phone'].hasError('required')">
+                            Phone number is <strong>required</strong>
+                        </mat-error>
+                        <mat-error *ngIf="registerForm.controls['phone'].hasError('pattern')">
+                            Phone number <strong>must</strong> contain only numbers
+                        </mat-error>
+                        <mat-error *ngIf="registerForm.controls['phone'].hasError('minlength')">
+                            Phone number <strong>must</strong> be more than 6 digits long
+                        </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <button 
+                    *ngIf="!isProfile"
+                    [disabled]="registerForm.invalid"
+                    style="margin-left: 225px;"
+                    mat-raised-button 
+                    class="btn-success"
+                    type="submit">
+                    Register
+                </button>
+                <button 
+                    *ngIf="isProfile && isEdit"
+                    [disabled]="registerForm.invalid || !registerForm.dirty"
+                    style="margin-left: 225px;"
+                    mat-raised-button 
+                    class="btn-success"
+                    type="submit">
+                    Save
+                </button>
+                <button 
+                    *ngIf="isProfile && !isEdit"
+                    style="margin-left: 225px;"
+                    mat-raised-button 
+                    color="primary"
+                    type="button"
+                    (click)="onEdit()">
+                    Edit Info
+                </button>
+            </div>
+            <div class="col-md-2" *ngIf="isEdit">
+                <button
+                    mat-raised-button 
+                    color='warn'
+                    type="button"
+                    (click)="onCancel()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>

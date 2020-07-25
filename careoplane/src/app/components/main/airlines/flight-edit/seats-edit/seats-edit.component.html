@@ -1,0 +1,14 @@
+<a (click)="Back()"
+    mat-mini-fab >
+    <mat-icon>arrow_back</mat-icon>
+</a>
+<div class="row">
+    <div class="col-md-9">
+        <app-seat-selector [num]="1"></app-seat-selector>
+    </div>
+    <div class="col-md-3">
+        <router-outlet>
+        </router-outlet>
+    </div>
+</div>
+

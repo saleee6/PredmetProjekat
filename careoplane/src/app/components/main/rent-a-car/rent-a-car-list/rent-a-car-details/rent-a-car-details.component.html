@@ -1,0 +1,78 @@
+<div class="row">
+    <a 
+        *ngIf="!isAdmin"
+        [routerLink]="['../../']"
+        routerLinkActive="active"
+        mat-mini-fab >
+        <mat-icon>arrow_back</mat-icon>
+    </a>
+    <div class="col-md-2">
+        <h1>{{ rentACar.name }}</h1><h3> {{ rentACar.rating }} / 5 </h3>
+        <h4>{{ rentACar.address }}</h4>
+    </div>
+    <div class="col-md-4">
+        <div #mapContainer id="map" style="width: 300px; height: 130px;"></div>
+    </div>
+    <div class="col-md-2">
+        <p style="word-wrap: break-word;">{{ rentACar.description }}</p>
+    </div>
+    <div class="col-md-2">
+        <table>
+            <tr>
+                <th>Locations</th>
+            </tr>
+            <tr *ngFor="let location of rentACar.locations">
+                {{location}}
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Price List</th>
+            </tr>
+            <tr>
+                <td>Rent A Car</td>
+                <td>{{rentACar.prices[0] | currency: 'EUR'}}</td>
+            </tr>
+            <tr>
+                <td>Rent A Van</td>
+                <td>{{rentACar.prices[1] | currency: 'EUR'}}</td>
+            </tr>
+            <tr>
+                <td>Rent A Truck</td>
+                <td>{{rentACar.prices[2] | currency: 'EUR'}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-1">
+        <button
+            *ngIf="isAdmin"
+            style="width: 100px;"
+            mat-raised-button 
+            color="primary"
+            (click)="onEdit()">
+            Edit Info
+        </button>
+        <button
+            *ngIf="isAdmin"
+            style="margin-top: 10px; width: 100px;"
+            mat-raised-button 
+            color="primary"
+            (click)="onAddVehicle()">
+            Add Vehicle
+        </button>
+        <button
+            *ngIf="isAdmin"
+            style="margin-top: 10px; width: 100px;"
+            mat-raised-button 
+            color="primary"
+            (click)="onSale()">
+            {{isOnSaleClicked ? 'Regular' : 'On Sale'}}
+        </button>
+    </div>
+</div>
+<hr *ngIf="!isAdmin">
+<div class="row">
+    <div class="col-md-12">
+        <app-vehicle-list [rentACar]="rentACar" [isAdmin]="isAdmin"></app-vehicle-list>
+    </div>
+</div>

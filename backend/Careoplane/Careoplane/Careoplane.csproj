@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200515180425_Migration2.cs" />
+    <Compile Remove="Migrations\20200515180425_Migration2.Designer.cs" />
+    <Compile Remove="Migrations\20200516110727_DBv3.0.cs" />
+    <Compile Remove="Migrations\20200516110727_DBv3.0.Designer.cs" />
+    <Compile Remove="Migrations\20200516120642_CareoplaneDB-v2.0.cs" />
+    <Compile Remove="Migrations\20200516120642_CareoplaneDB-v2.0.Designer.cs" />
+    <Compile Remove="Migrations\20200523180314_CareoplaneDBv6.0.cs" />
+    <Compile Remove="Migrations\20200523180314_CareoplaneDBv6.0.Designer.cs" />
+    <Compile Remove="Migrations\20200602163631_CareoplaneDBv15.cs" />
+    <Compile Remove="Migrations\20200602163631_CareoplaneDBv15.Designer.cs" />
+    <Compile Remove="Migrations\20200605150003_CareoplaneDBv21.cs" />
+    <Compile Remove="Migrations\20200605150003_CareoplaneDBv21.Designer.cs" />
+    <Compile Remove="Migrations\20200608120636_CareoplaneDBv25.cs" />
+    <Compile Remove="Migrations\20200608120636_CareoplaneDBv25.Designer.cs" />
+    <Compile Remove="Migrations\Authentication\20200531160838_CareoplaneDBv13.0.cs" />
+    <Compile Remove="Migrations\Authentication\20200531160838_CareoplaneDBv13.0.Designer.cs" />
+    <Compile Remove="Migrations\Authentication\20200531162058_CareoplaneDBv13.0.cs" />
+    <Compile Remove="Migrations\Authentication\20200531162058_CareoplaneDBv13.0.Designer.cs" />
+    <Compile Remove="Migrations\Authentication\20200601122759_CareoplaneDBv15.0.cs" />
+    <Compile Remove="Migrations\Authentication\20200601122759_CareoplaneDBv15.0.Designer.cs" />
+    <Compile Remove="Migrations\Authentication\20200601122920_CareoplaneDBv15.0.cs" />
+    <Compile Remove="Migrations\Authentication\20200601122920_CareoplaneDBv15.0.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.6.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="StaticFiles\Images\" />
+  </ItemGroup>
+
+
+</Project>

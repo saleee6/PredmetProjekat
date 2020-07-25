@@ -1,0 +1,19 @@
+#map {
+    height: 100%;
+    width: 100%;
+   }
+
+.example-large-box {
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 16px;
+padding: 16px;
+border-radius: 8px;
+}
+
+img {
+    height: 150px;
+    width: 150px;
+    /* -o-object-fit: contain; */
+  }

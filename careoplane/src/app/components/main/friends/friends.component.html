@@ -1,0 +1,24 @@
+<mat-tab-group>
+    <mat-tab label="Friends">
+        <div class="example-large-box mat-elevation-z4">
+            <app-friends-list [type]="'friends'" style="width: 90%;">
+            </app-friends-list>
+        </div>
+    </mat-tab>
+    <mat-tab>
+        <ng-template matTabLabel>
+            <span [matBadge]="requestCount" matBadgeColor="accent"  matBadgeOverlap="false" *ngIf="requestCount != 0">Requests</span>
+            <span *ngIf="requestCount == 0">Requests</span>
+        </ng-template>
+        <div class="example-large-box mat-elevation-z4">
+            <app-friends-list [type]="'requests'" style="width: 90%;">
+            </app-friends-list>
+        </div>
+    </mat-tab>
+    <mat-tab label="Add Friends">
+        <div class="example-large-box mat-elevation-z4">
+            <app-friends-list [type]="'search'" style="width: 90%;">
+            </app-friends-list>
+        </div>
+    </mat-tab>
+</mat-tab-group>

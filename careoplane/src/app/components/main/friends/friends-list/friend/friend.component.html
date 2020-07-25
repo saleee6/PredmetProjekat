@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-md-1">
+        <mat-icon>face</mat-icon>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md">
+                {{user.name}}&nbsp;{{user.surname}}  
+            </div>
+        </div>  
+    </div>
+    <div class="col-md-3">
+        {{user.userName}}
+    </div>
+    <div class="col-md-4 col-md-offset-1">
+        <div class="row">
+            <div *ngIf="type == 'requests'">
+                <button mat-raised-button color="primary" (click)="Accept()">
+                    Accept Request
+                </button>
+                &nbsp;
+            </div>
+            <div *ngIf="type == 'requests'">
+                <button mat-raised-button color="warn" (click)="Decline()">
+                    Decline Request
+                </button>
+                &nbsp;
+            </div>
+            <div *ngIf="type == 'search'">
+                <button mat-raised-button color="primary" (click)="Add()">
+                    Add Friend
+                </button>
+                &nbsp;
+            </div>
+            <div *ngIf="type == 'sent'">
+                <button mat-raised-button color="warn" (click)="Cancel()">
+                    Cancel Request
+                </button>
+                &nbsp;
+            </div>
+            <div *ngIf="type == 'friends'">
+                <button mat-raised-button color="warn" (click)="Remove()">
+                    Remove Friend
+                </button>
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</div>

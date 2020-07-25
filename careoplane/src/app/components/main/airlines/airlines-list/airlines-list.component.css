@@ -1,0 +1,10 @@
+.testimonial-group > .row {
+    overflow: auto;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+  }
+
+#pictureDiv {
+  margin-right: 30px;
+  margin-left: 30px;
+}
