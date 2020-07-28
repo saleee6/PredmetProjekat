@@ -19,24 +19,24 @@ export class VehicleService {
     vehicleForReservation = new Subject<Vehicle>();
 
     getVehiclesForCompany(company: string) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Vehicles/ForCompany';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles/ForCompany';
         var params = new HttpParams().append('company', company);
         return this.http.get(address, {params: params});
     }
 
     getVehiclesForUser() {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/VehicleReservations/ForUser';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/VehicleReservations/ForUser';
         return this.http.get(address);
     }
 
     getReservation(reservationId: number) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/VehicleReservations/' + reservationId.toString();
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/VehicleReservations/' + reservationId.toString();
         
         return this.http.get(address);
     }
 
     getReservationsForVehicles(vehicleIds: number[]) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/VehicleReservations/ForVehicles';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/VehicleReservations/ForVehicles';
         let ids: string = '';
         vehicleIds.forEach(id => ids+=id.toString() + ',');
         var params = new HttpParams().append('vehicleIds', ids);
@@ -45,14 +45,14 @@ export class VehicleService {
     }
 
     getCompanyForVehicle(vehicleId: number) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Vehicles/Company';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles/Company';
         var params = new HttpParams().append('vehicleId', vehicleId.toString());
         
         return this.http.get(address, {params: params});
     }
 
     rateVehicle(vehicleId: number, rating: number, reservationId: number) {
-        let address ='http://localhost:' + localStorage.getItem('port') + '/api/Vehicles/Rate';
+        let address ='http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles/Rate';
         let params = {
         'vehicleId': vehicleId,
         'rating': rating,
@@ -62,7 +62,7 @@ export class VehicleService {
     }
 
     cancelReservation(reservationId: number) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/VehicleReservations/' + reservationId;
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/VehicleReservations/' + reservationId;
         return this.http
         .delete(
             address
@@ -70,7 +70,7 @@ export class VehicleService {
     }
 
     postVehicle(newVehicle: Vehicle) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Vehicles';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles';
         return this.http
         .post(
             address,
@@ -79,7 +79,7 @@ export class VehicleService {
     }
 
     deleteVehicle(vehicle: Vehicle) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Vehicles/' + vehicle.vehicleId + "?version=" + vehicle.version;
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles/' + vehicle.vehicleId + "?version=" + vehicle.version;
         return this.http
         .delete(
             address
@@ -87,7 +87,7 @@ export class VehicleService {
     }
 
     putVehicle(updatedVehicle: Vehicle) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Vehicles/' + updatedVehicle.vehicleId;
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles/' + updatedVehicle.vehicleId;
         return this.http
         .put(
             address,
@@ -96,7 +96,7 @@ export class VehicleService {
     }
 
     reserveVehicle(reservation: VehicleReservation, rentACar: RentACar, version: number) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/VehicleReservations?version=' + version;
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/VehicleReservations?version=' + version;
         return this.http
         .post(
             address,
@@ -105,7 +105,7 @@ export class VehicleService {
     }
 
     getVehiclesOnSale(location: string, fromDate: Date, toDate: Date) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Vehicles/OnSale';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles/OnSale';
         var params = new HttpParams()
         .append('location', location)
         .append('fromDate', fromDate.toDateString())
@@ -115,7 +115,7 @@ export class VehicleService {
     }
 
     getVehicle(vehicleId: number) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Vehicles/' + vehicleId.toString();
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/Vehicles/' + vehicleId.toString();
         return this.http
         .get(
             address

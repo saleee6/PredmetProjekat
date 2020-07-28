@@ -85,27 +85,27 @@ export class AirlineService {
   }
 
   getAirlinesDetailsDB(){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines/Details';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines/Details';
     return this.http.get<TOAirline[]>(address);
   }
 
   getAirlineDisplay(name: string){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines/Display/' + name;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines/Display/' + name;
     return this.http.get<TOAirline>(address);
   }
 
   getAirlineAdmin(name: string){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines/Admin/' + name;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines/Admin/' + name;
     return this.http.get<TOAirline>(address);
   }
 
   getDestinations(){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines/Destinations/' + localStorage.getItem('company');
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines/Destinations/' + localStorage.getItem('company');
     return this.http.get<TOPrimaryObject[]>(address);
   }
 
   getSearchedFlightsDB(origin: string, destination: string,  departure: Date, num: number, classType: string, name:string, multi:string){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Flights/Searched';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights/Searched';
     let notSingle = 'false';
     if(name == null)
       notSingle = 'true';
@@ -124,7 +124,7 @@ export class AirlineService {
   }
 
   getAirlineEdit(name : string){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines/Edit/' + name;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines/Edit/' + name;
     return this.http.get<TOAirline>(address);
   }
 
@@ -143,7 +143,7 @@ export class AirlineService {
       tempAirline.segmentLengths.push(new TOPriceSegmentSeat(variable.id,variable.value,variable.ordinal,variable.reference));
     }
     
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines';
     return this.http.post(address,tempAirline);
   }
 
@@ -162,17 +162,17 @@ export class AirlineService {
       tempAirline.segmentLengths.push(new TOPriceSegmentSeat(variable.id,variable.value,variable.ordinal,variable.reference));
     }
 
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines/' + tempAirline.name;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines/' + tempAirline.name;
     return this.http.put(address,tempAirline);
   }
 
   getFlightDB(id: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Flights/' + id;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights/' + id;
     return this.http.get<TOFlight>(address); 
   }
 
   EditFlight(flight: Flight) {
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Flights/' + flight.id.toString();
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights/' + flight.id.toString();
     let tempFlight = new TOFlight(flight.airlineName,flight.origin,flight.destination,
       flight.departure.toString(),flight.arrival.toString(),flight.distance,flight.connections,
       flight.id,[],[],[],[],flight.rating,flight.version);
@@ -180,7 +180,7 @@ export class AirlineService {
   }
 
   AddFlgiht(flight: Flight) {
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Flights';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights';
     let tempFlight = new TOFlight(flight.airlineName,flight.origin,flight.destination,
       flight.departure.toString(),flight.arrival.toString(),flight.distance,flight.connections,
       flight.id,[],[],[],[],0,0);
@@ -188,24 +188,24 @@ export class AirlineService {
   }
 
   DeleteFlight(id: number, version: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Flights/' + id.toString() + '?version=' + version;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights/' + id.toString() + '?version=' + version;
     return this.http.delete(address);
   }
 
   getSeat(id: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Seats/' + id;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Seats/' + id;
     return this.http.get<TOSeat>(address);
   }
 
   changeSeat(seat: Seat, version: number) {
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Seats/' + 
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Seats/' + 
     seat.seatId.toString() + "?version=" + version;
     let seatTemp = new TOSeat(seat.flightId,seat.name,seat.type,seat.occupied,seat.price,seat.discount,seat.seatId);
     return this.http.put(address,seatTemp);
   }
 
   changeFastTicket(fastTicket: FastTicket){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FastTickets/' + fastTicket.seat.seatId + '?version=' + fastTicket.flight.version;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FastTickets/' + fastTicket.seat.seatId + '?version=' + fastTicket.flight.version;
     let tempFastTicket = new TOFastTicket(
       new TOSeat(fastTicket.seat.flightId,fastTicket.seat.name,fastTicket.seat.type,
         fastTicket.seat.occupied,fastTicket.seat.price,fastTicket.seat.discount,fastTicket.seat.seatId), 
@@ -214,27 +214,27 @@ export class AirlineService {
   }
 
   deleteFastReservation(id: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FastTickets/' + id;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FastTickets/' + id;
     return this.http.delete(address);
   }
 
   makeReservation(reservation: FlightReservation, usedPoints: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FlightReservations/' + usedPoints;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FlightReservations/' + usedPoints;
     return this.http.post(address,reservation);
   }
 
   getReservations() {
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FlightReservations';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FlightReservations';
     return this.http.get<FlightReservation[]>(address);
   }
 
   getCompanyReservations(company: string){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FlightReservations/Company/' + company;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FlightReservations/Company/' + company;
     return this.http.get<FlightReservation[]>(address);
   }
 
   getReservation(id: number, username: string) {
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FlightReservations/Single';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FlightReservations/Single';
     var params = new HttpParams()
       .append('id',id.toString())
       .append('username',username)
@@ -242,7 +242,7 @@ export class AirlineService {
   }
 
   acceptInvitation(reservation: FlightReservation, tempUsername: string){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FlightReservations/' + reservation.reservationId;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FlightReservations/' + reservation.reservationId;
     let username = {
       'username': tempUsername
     };
@@ -250,7 +250,7 @@ export class AirlineService {
   }
 
   declineInvitation(reservation: FlightReservation, tempUsername: string){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FlightReservations/Cancel/' + reservation.reservationId;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FlightReservations/Cancel/' + reservation.reservationId;
     let username = {
       'username': tempUsername
     };
@@ -258,7 +258,7 @@ export class AirlineService {
   }
 
   rateFlight(rating: number,id: number, username: string, passengerSeatId: number, reservationId: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Flights/Rate';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights/Rate';
     let params = {
       'id': id,
       'rating': rating,
@@ -270,7 +270,7 @@ export class AirlineService {
   }
 
   rateAirline(rating: number,id: string, username: string, passengerSeatId: number, reservationId: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Airlines/Rate';
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Airlines/Rate';
     let params = {
       'id': id,
       'rating': rating,
@@ -282,16 +282,16 @@ export class AirlineService {
   }
 
   saveImage(formData){
-    return this.http.post('http://localhost:' + localStorage.getItem('port') + '/api/Upload', formData);
+    return this.http.post('http://localhost:' + localStorage.getItem('airlinePort') + '/api/Upload', formData);
   }
 
   getSeats(id: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/Seats/Flight/' + id;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Seats/Flight/' + id;
     return this.http.get(address);
   }
 
   cancelReservation(id: number){
-    let address ='http://localhost:' + localStorage.getItem('port') + '/api/FlightReservations/' + id;
+    let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/FlightReservations/' + id;
     return this.http.delete(address);
   }
 }

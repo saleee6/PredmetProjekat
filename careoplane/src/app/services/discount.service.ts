@@ -11,7 +11,7 @@ export class DiscountService {
     ) {}
 
     getDiscounts() {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Discounts';
+        let address = 'http://localhost:' + localStorage.getItem('userPort') + '/api/Discounts';
         return this.http
         .get(
             address
@@ -19,7 +19,7 @@ export class DiscountService {
     }
 
     putDiscount(updatedDiscount: Discount) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Discounts/' + updatedDiscount.discountId;
+        let address = 'http://localhost:' + localStorage.getItem('userPort') + '/api/Discounts/' + updatedDiscount.discountId;
         return this.http
         .put(
             address,

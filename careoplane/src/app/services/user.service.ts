@@ -72,7 +72,7 @@ export class UserService {
     // }
 
     editUser(updatedUser: User) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/AppUsers/UpdateUser';
+        let address = 'http://localhost:' + localStorage.getItem('userPort') + '/api/AppUsers/UpdateUser';
         return this.http
         .put(
             address,
@@ -81,7 +81,7 @@ export class UserService {
     }
 
     updateCompanyName(companyName: string) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/AppUsers/UpdateCompany/' + localStorage.getItem('username');
+        let address = 'http://localhost:' + localStorage.getItem('userPort') + '/api/AppUsers/UpdateCompany/' + localStorage.getItem('username');
         return this.http
         .put(
             address,
@@ -100,7 +100,7 @@ export class UserService {
             City: user.city,
             Role: user.role
         }
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/Register';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/Register';
         return this.http.post(address, body);
     }
 
@@ -109,17 +109,17 @@ export class UserService {
             Username: usermail,
             Password: password
         }
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/Login';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/Login';
         return this.http.post(address, user);
     }
 
     getUser() {
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/GetUserProfile';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/GetUserProfile';
         return this.http.get(address);
     }
 
     externalLogin(formData){
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/SocialLogin';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/SocialLogin';
         return this.http.post(address, formData);
     }
 
@@ -278,27 +278,27 @@ export class UserService {
     }
 
     MakeRequest(userA: User, userB: User){
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/AddFriendship';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/AddFriendship';
         return this.http.post<TOFriend>(address, {userA: userA, userB: userB});
     }
 
     UpdateStatus(id: number, status: string){
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/FriendshipStatus/' + id.toString();
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/FriendshipStatus/' + id.toString();
         return this.http.put(address,{status: status});
     }
 
     DeclineRequest(id: number){
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/DeleteFriendship/' + id.toString();
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/DeleteFriendship/' + id.toString();
         return this.http.delete(address);
     }
 
     getAllUsers(){
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/AllUsers';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/AllUsers';
         return this.http.get<User[]>(address);
     }
 
     verifyEmail(token: string,username : string){
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/Confirmation';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/Confirmation';
         
         var params = new HttpParams()
         .append('username',username)
@@ -308,7 +308,7 @@ export class UserService {
     }
 
     updatePassword(oldPassword: string, newPassword: string) {
-        let address = "http://localhost:" + localStorage.getItem('port') + '/api/AppUsers/UpdatePassword';
+        let address = "http://localhost:" + localStorage.getItem('userPort') + '/api/AppUsers/UpdatePassword';
         return this.http.put(address, {oldPassword: oldPassword, newPassword: newPassword});
     }
 }

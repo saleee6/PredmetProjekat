@@ -47,7 +47,7 @@ export class RentACarService {
     newVehicles: Vehicle[] = [];
 
     getRentACar(RentACarName: string) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/RentACars/' + RentACarName;
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/RentACars/' + RentACarName;
         return this.http
         .get(
             address
@@ -55,7 +55,7 @@ export class RentACarService {
     }
 
     getRentACars() {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/RentACars';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/RentACars';
         return this.http
         .get(
             address
@@ -96,7 +96,7 @@ export class RentACarService {
     }
 
     addRentACar(newRentACar: RentACar) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/RentACars';
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/RentACars';
         return this.http
         .post(
             address,
@@ -105,7 +105,7 @@ export class RentACarService {
     }
 
     editRentACar(updatedRentACar: RentACar) {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/RentACars/' + updatedRentACar.name;
+        let address = 'http://localhost:' + localStorage.getItem('racPort') + '/api/RentACars/' + updatedRentACar.name;
         return this.http
         .put(
             address,
@@ -161,7 +161,7 @@ export class RentACarService {
     }
 
     rateRentACar(rentACarName: string, rating: number, reservationId: number) {
-        let address ='http://localhost:' + localStorage.getItem('port') + '/api/RentACars/Rate';
+        let address ='http://localhost:' + localStorage.getItem('racPort') + '/api/RentACars/Rate';
         let params = {
         'rentACarName': rentACarName,
         'rating': rating,
@@ -208,7 +208,7 @@ export class RentACarService {
     }
 
     getDiscountForVehicles() {
-        let address = 'http://localhost:' + localStorage.getItem('port') + '/api/Discounts/Vehicle';
+        let address = 'http://localhost:' + localStorage.getItem('userPort') + '/api/Discounts/Vehicle';
         return this.http.get(address);
     }
 }

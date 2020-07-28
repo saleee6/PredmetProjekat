@@ -10,6 +10,9 @@ export class AppComponent implements OnInit {
   valueOfSlider = 0;
 
   public ngOnInit(){
-    localStorage.setItem('port','52075');
+    localStorage.setItem('port','52075'); //Original - 52075, Docker Desktop - 52716
+    localStorage.setItem('airlinePort', '57219');
+    localStorage.setItem('racPort', '57221');
+    localStorage.setItem('userPort', '57225');
   }
 }
