@@ -23,14 +23,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
-    },
-    "Azure Dev Spaces": {
-      "commandName": "AzureDevSpaces"
-    },
-    "Docker (1)": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/AppUsers",
-      "publishAllPorts": true
     }
   }
 }
