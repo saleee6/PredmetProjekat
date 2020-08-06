@@ -40,11 +40,17 @@ namespace UserMicroservice
 
             services.AddControllers();
 
-            services.AddDbContext<DatabaseContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext")));
+            services.AddDbContextPool<DatabaseContext>(options =>
+                    options.UseMySql(Configuration.GetConnectionString("DatabaseContext")));
 
-            services.AddDbContext<AuthenticationContext>(options =>
-                   options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext")));
+            services.AddDbContextPool<AuthenticationContext>(options =>
+                    options.UseMySql(Configuration.GetConnectionString("DatabaseContext")));
+
+            //services.AddDbContext<DatabaseContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext")));
+
+            //services.AddDbContext<AuthenticationContext>(options =>
+            //       options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext")));
 
             services.AddDefaultIdentity<AppUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<AuthenticationContext>();
 

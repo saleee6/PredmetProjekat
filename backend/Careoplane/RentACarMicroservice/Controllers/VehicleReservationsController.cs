@@ -19,12 +19,10 @@ namespace RentACarMicroservice.Controllers
     public class VehicleReservationsController : ControllerBase
     {
         private readonly DatabaseContext _context;
-        private UserManager<AppUser> _userManager;
 
-        public VehicleReservationsController(DatabaseContext context, UserManager<AppUser> userManager)
+        public VehicleReservationsController(DatabaseContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         // GET: api/VehicleReservations
@@ -68,20 +66,21 @@ namespace RentACarMicroservice.Controllers
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
             string role = User.Claims.First(c => c.Type == "Roles").Value;
+            string username = User.Claims.First(c => c.Type == "Username").Value;
 
             if (role != "regular")
             {
                 return BadRequest("You are not authorised to do this action");
             }
 
-            var user = await _userManager.FindByIdAsync(userId);
+            //var user = await _userManager.FindByIdAsync(userId);
 
-            if (user != null)
+            if (username != null && username != "")
             {
                 List<VehicleReservation> VehicleReservationList = new List<VehicleReservation>();
 
                 VehicleReservationList = await _context.VehicleReservation
-                    .Where(vehicleReservation => vehicleReservation.UserName == user.UserName)
+                    .Where(vehicleReservation => vehicleReservation.UserName == username)
                     .Where(vehicleReservation => vehicleReservation.Type == "vehicle")
                     .ToListAsync();
 
@@ -211,7 +210,7 @@ namespace RentACarMicroservice.Controllers
         }
 
         // DELETE: api/VehicleReservations/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}")] //Izmeniti odgovor
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<TOVehicleReservation>> DeleteVehicleReservation(int id)
         {
@@ -252,5 +251,57 @@ namespace RentACarMicroservice.Controllers
         {
             return _context.VehicleReservation.Any(e => e.ReservationId == id);
         }
+
+        [HttpGet("Vehicle/{id}")]
+        async Task<ActionResult<Vehicle>> GetVehicleForReservation(int id)
+        {
+            var vehicleReservation = await _context.VehicleReservation.FindAsync(id);
+
+            if (vehicleReservation == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _context.Vehicles
+                .Include(vehicle => vehicle.RentACar)
+                .Where(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId)
+                .FirstOrDefaultAsync();
+
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            return vehicle;
+        }
+
+        //[HttpDelete("{id}")]
+        //async Task<object> deleteVehicleReservation(int id)
+        //{
+        //    VehicleReservation vehicleReservation = await _context.VehicleReservation.FindAsync(id);
+        //    var vehicle = await _context.Vehicles.Include(vehicle => vehicle.UnavailableDates).FirstOrDefaultAsync(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId);
+
+        //    vehicle.UnavailableDates.ToList().ForEach(
+        //        unavailableDate =>
+        //        {
+        //            if (unavailableDate.Date.Date >= vehicleReservation.FromDate.Date && unavailableDate.Date.Date <= vehicleReservation.ToDate.Date)
+        //            {
+        //                _context.Remove(unavailableDate);
+        //            }
+        //        }
+        //    );
+        //    _context.Entry(vehicleReservation).State = EntityState.Deleted;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //        return Ok();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //}
     }
 }

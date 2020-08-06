@@ -20,11 +20,9 @@ namespace AirlineMicroservice.Controllers
     public class FastTicketsController : ControllerBase
     {
         private readonly DatabaseContext _context;
-        private UserManager<AppUser> _userManager;
 
-        public FastTicketsController(UserManager<AppUser> userManager, DatabaseContext context)
+        public FastTicketsController(DatabaseContext context)
         {
-            _userManager = userManager;
             _context = context;
         }
 
@@ -65,14 +63,15 @@ namespace AirlineMicroservice.Controllers
                 await _context.SaveChangesAsync();
 
                 string userId = User.Claims.First(c => c.Type == "UserID").Value;
-                var user = await _userManager.FindByIdAsync(userId);
+                string username = User.Claims.First(c => c.Type == "Username").Value;
+                //var user = await _userManager.FindByIdAsync(userId);
 
                 if (occupied == true)
                 {
                     AirlineMicroservice.Models.FlightReservation flightReservation = new AirlineMicroservice.Models.FlightReservation()
                     {
                         ReservationId = 0,
-                        Creator = user.UserName,
+                        Creator = username,
                         FinalPrice = fastTicket.NewPrice,
                         TimeOfCreation = DateTime.Now,
                         VehicleReservationId = 0
@@ -91,7 +90,7 @@ namespace AirlineMicroservice.Controllers
                         PassengerSeatId = 0,
                         FlightReservationDetail = flightReservationDetail,
                         SeatId = seat.SeatId,
-                        Username = user.UserName,
+                        Username = username,
                         Accepted = true,
                         AirlineScored = false,
                         FlightScored = false ,

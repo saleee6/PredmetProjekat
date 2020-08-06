@@ -21,12 +21,10 @@ namespace Careoplane.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        private readonly UserManager<AppUser> _userManager;
         private readonly DatabaseContext _context;
-        public UploadController(UserManager<AppUser> userManager, DatabaseContext context)
+        public UploadController(DatabaseContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         [HttpPost, DisableRequestSizeLimit]
@@ -35,7 +33,8 @@ namespace Careoplane.Controllers
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
             string role = User.Claims.First(c => c.Type == "Roles").Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            string username = User.Claims.First(c => c.Type == "Username").Value;
+            //var user = await _userManager.FindByIdAsync(userId);
 
             if (role != "aeroAdminNew" && role != "aeroAdmin")
             {
@@ -44,6 +43,7 @@ namespace Careoplane.Controllers
 
             try
             {
+                string company = User.Claims.First(c => c.Type == "Company").Value;
                 var file = Request.Form.Files[0];
                 var folderName = Path.Combine("StaticFiles", "Images");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
@@ -59,7 +59,7 @@ namespace Careoplane.Controllers
                         file.CopyTo(stream);
                     }
 
-                    AirlineMicroservice.Models.Airline airline = await _context.Airlines.FindAsync(user.Company);
+                    AirlineMicroservice.Models.Airline airline = await _context.Airlines.FindAsync(company);
                     airline.Image = dbPath;
 
                     _context.Entry(airline).State = EntityState.Modified;

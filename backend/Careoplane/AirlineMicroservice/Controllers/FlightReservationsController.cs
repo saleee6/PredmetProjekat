@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.FileProviders;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Net.Http;
 
 namespace AirlineMicroservice.Controllers
 {
@@ -23,12 +24,9 @@ namespace AirlineMicroservice.Controllers
     public class FlightReservationsController : ControllerBase
     {
         private readonly DatabaseContext _context;
-        private readonly RentACarMicroservice.Database.DatabaseContext _rentACarContext;
-        private readonly UserManager<Common.Models.AppUser> _userManager;
-        public FlightReservationsController(UserManager<Common.Models.AppUser> userManager, DatabaseContext context)
+        public FlightReservationsController(DatabaseContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         // GET: api/FlightReservations
@@ -37,7 +35,8 @@ namespace AirlineMicroservice.Controllers
         public async Task<ActionResult<IEnumerable<TOFlightReservation>>> GetFlightReservations()
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            string username = User.Claims.First(c => c.Type == "Username").Value;
+            //var user = await _userManager.FindByIdAsync(userId);
 
             var reservations = await _context.FlightReservations.Include(reservation => reservation.FlightReservationDetails).ThenInclude(details => details.PassengerSeats).ToListAsync();
 
@@ -121,7 +120,7 @@ namespace AirlineMicroservice.Controllers
             {
                 if (reservation.VehicleReservationId != 0)
                 {
-                    await deleteVehicleReservation(reservation.VehicleReservationId);
+                    await deleteVehicleReservation(reservation.VehicleReservationId).ConfigureAwait(false);
                 }
                 _context.Entry(reservation).State = EntityState.Deleted;
             }
@@ -149,7 +148,7 @@ namespace AirlineMicroservice.Controllers
 
             foreach (FlightReservation flightReservation in reservations)
             {
-                if(flightReservation.Creator == user.UserName)
+                if(flightReservation.Creator == username)
                 {
                     varResult.TryAdd(flightReservation.ReservationId, new TOFlightReservation(flightReservation, _context));
                 }
@@ -157,7 +156,7 @@ namespace AirlineMicroservice.Controllers
                 {
                     foreach(PassengerSeat passengerSeat in flightReservationDetail.PassengerSeats)
                     {
-                        if (passengerSeat.Username == user.UserName)
+                        if (passengerSeat.Username == username)
                         {
                             varResult.TryAdd(flightReservation.ReservationId, new TOFlightReservation(flightReservation, _context));
                         }
@@ -262,7 +261,7 @@ namespace AirlineMicroservice.Controllers
             {
                 if (reservation.VehicleReservationId != 0)
                 {
-                    await deleteVehicleReservation(reservation.VehicleReservationId);
+                    await deleteVehicleReservation(reservation.VehicleReservationId).ConfigureAwait(false);
                 }
                 _context.Entry(reservation).State = EntityState.Deleted;
             }
@@ -378,7 +377,7 @@ namespace AirlineMicroservice.Controllers
             {
                 if (flightReservation.VehicleReservationId != 0)
                 {
-                    await deleteVehicleReservation(flightReservation.VehicleReservationId);
+                    await deleteVehicleReservation(flightReservation.VehicleReservationId).ConfigureAwait(false);
                 }
 
                 _context.FlightReservations.Remove(flightReservation);
@@ -507,7 +506,7 @@ namespace AirlineMicroservice.Controllers
             {
                 if(tempFlightReservation.VehicleReservationId != 0)
                 {
-                    await deleteVehicleReservation(tempFlightReservation.VehicleReservationId);
+                    await deleteVehicleReservation(tempFlightReservation.VehicleReservationId).ConfigureAwait(false);
                 }
                 _context.Entry(tempFlightReservation).State = EntityState.Deleted;
 
@@ -532,138 +531,121 @@ namespace AirlineMicroservice.Controllers
             return NoContent();
         }
 
-        async Task<object> deleteVehicleReservation(int id)
+        async Task deleteVehicleReservation(int id)
         {
-            Common.Models.VehicleReservation vehicleReservation = await _rentACarContext.VehicleReservation.FindAsync(id);
-            var vehicle = await _rentACarContext.Vehicles.Include(vehicle => vehicle.UnavailableDates).FirstOrDefaultAsync(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId);
-
-            vehicle.UnavailableDates.ToList().ForEach(
-                unavailableDate =>
-                {
-                    if (unavailableDate.Date.Date >= vehicleReservation.FromDate.Date && unavailableDate.Date.Date <= vehicleReservation.ToDate.Date)
-                    {
-                        _context.Remove(unavailableDate);
-                    }
-                }
-            );
-            _context.Entry(vehicleReservation).State = EntityState.Deleted;
-
-            try
+            using (HttpClient client = new HttpClient())
             {
-                await _context.SaveChangesAsync();
-                return Ok();
+                var httpRequest = new HttpRequestMessage(HttpMethod.Delete, "http://rentacarmicroservice/VehicleReservations/" + id.ToString());
+                await client.SendAsync(httpRequest);
             }
-            catch(Exception e)
-            {
-                return BadRequest();
-            }
-            
+
         }
 
         // POST: api/FlightReservations
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{points}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<FlightReservation>> PostFlightReservation(TOFlightReservation flightReservation, int points)
-        {
-            TOFlight tempFlight = new TOFlight();
+        //[HttpPost("{points}")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<ActionResult<FlightReservation>> PostFlightReservation(TOFlightReservation flightReservation, int points)
+        //{
+        //    TOFlight tempFlight = new TOFlight();
 
-            string userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var inviter = await _userManager.FindByIdAsync(userId);
+        //    string userId = User.Claims.First(c => c.Type == "UserID").Value;
+        //    string username = User.Claims.First(c => c.Type == "Username").Value;
+        //    //var inviter = await _userManager.FindByIdAsync(userId);
 
-            Common.Models.VehicleReservation vehicleReservation = null;
-            Common.Models.Vehicle vehicle = null;
+        //    Common.Models.VehicleReservation vehicleReservation = null;
+        //    Common.Models.Vehicle vehicle = null;
 
-            if (flightReservation.VehicleReservationId != 0)
-            {
-                vehicleReservation = await _rentACarContext.VehicleReservation.FindAsync(flightReservation.VehicleReservationId);
-                vehicle = await _rentACarContext.Vehicles.Include(vehicle => vehicle.RentACar).FirstOrDefaultAsync(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId);
-            }
+        //    if (flightReservation.VehicleReservationId != 0)
+        //    {
+        //        vehicleReservation = await _rentACarContext.VehicleReservation.FindAsync(flightReservation.VehicleReservationId);
+        //        vehicle = await _rentACarContext.Vehicles.Include(vehicle => vehicle.RentACar).FirstOrDefaultAsync(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId);
+        //    }
 
-            FlightReservation tempFlightReservation = new FlightReservation()
-            {
-                ReservationId = 0,
-                TimeOfCreation = DateTime.Now,
-                Creator = inviter.UserName,
-                VehicleReservationId = flightReservation.VehicleReservationId,
-                FinalPrice = flightReservation.FinalPrice
-            };
+        //    FlightReservation tempFlightReservation = new FlightReservation()
+        //    {
+        //        ReservationId = 0,
+        //        TimeOfCreation = DateTime.Now,
+        //        Creator = username,
+        //        VehicleReservationId = flightReservation.VehicleReservationId,
+        //        FinalPrice = flightReservation.FinalPrice
+        //    };
 
-            flightReservation.FlightReservationDetails.ForEach(flightReservation => { inviter.NumberOfPoint += (int)Math.Round(flightReservation.Flight.Distance); });
-            inviter.NumberOfPoint -= points;
+        //    flightReservation.FlightReservationDetails.ForEach(flightReservation => { inviter.NumberOfPoint += (int)Math.Round(flightReservation.Flight.Distance); });
+        //    inviter.NumberOfPoint -= points;
 
-            await _userManager.UpdateAsync(inviter);
+        //    await _userManager.UpdateAsync(inviter);
 
-            _context.FlightReservations.Add(tempFlightReservation);
-            await _context.SaveChangesAsync();
+        //    _context.FlightReservations.Add(tempFlightReservation);
+        //    await _context.SaveChangesAsync();
 
-            foreach (TOFlightReservationDetail tOFlightReservationDetail in flightReservation.FlightReservationDetails)
-            {
-                tempFlight = tOFlightReservationDetail.Flight;
+        //    foreach (TOFlightReservationDetail tOFlightReservationDetail in flightReservation.FlightReservationDetails)
+        //    {
+        //        tempFlight = tOFlightReservationDetail.Flight;
 
-                FlightReservationDetail flightReservationDetail = new FlightReservationDetail()
-                {
-                    FlightId = tOFlightReservationDetail.Flight.FlightId,
-                    FlightReservation = tempFlightReservation,
-                    FlightReservationDetailId = 0,
-                    AirlineName = tOFlightReservationDetail.Flight.AirlineName
-                };
+        //        FlightReservationDetail flightReservationDetail = new FlightReservationDetail()
+        //        {
+        //            FlightId = tOFlightReservationDetail.Flight.FlightId,
+        //            FlightReservation = tempFlightReservation,
+        //            FlightReservationDetailId = 0,
+        //            AirlineName = tOFlightReservationDetail.Flight.AirlineName
+        //        };
 
-                _context.Entry(flightReservationDetail).State = EntityState.Added;
+        //        _context.Entry(flightReservationDetail).State = EntityState.Added;
 
-                await _context.SaveChangesAsync();
+        //        await _context.SaveChangesAsync();
 
-                foreach (TOPassengerSeat tOPassengerSeat in tOFlightReservationDetail.PassengerSeats)
-                {
-                    PassengerSeat passengerSeat = new PassengerSeat()
-                    {
-                        SeatId = tOPassengerSeat.Seat.SeatId,
-                        Surname = tOPassengerSeat.Surname,
-                        PassengerSeatId = 0,
-                        Name = tOPassengerSeat.Name,
-                        Passport = tOPassengerSeat.Passport,
-                        Username = tOPassengerSeat.Username,
-                        FlightReservationDetail = flightReservationDetail,
-                        AirlineScored = false,
-                        FlightScored = false,
-                    };
+        //        foreach (TOPassengerSeat tOPassengerSeat in tOFlightReservationDetail.PassengerSeats)
+        //        {
+        //            PassengerSeat passengerSeat = new PassengerSeat()
+        //            {
+        //                SeatId = tOPassengerSeat.Seat.SeatId,
+        //                Surname = tOPassengerSeat.Surname,
+        //                PassengerSeatId = 0,
+        //                Name = tOPassengerSeat.Name,
+        //                Passport = tOPassengerSeat.Passport,
+        //                Username = tOPassengerSeat.Username,
+        //                FlightReservationDetail = flightReservationDetail,
+        //                AirlineScored = false,
+        //                FlightScored = false,
+        //            };
 
-                    if (passengerSeat.Username == "" || passengerSeat.Username == inviter.UserName)
-                    {
-                        passengerSeat.Accepted = true;
-                    }
-                    else
-                    {
-                        passengerSeat.Accepted = false;
-                    }
+        //            if (passengerSeat.Username == "" || passengerSeat.Username == inviter.UserName)
+        //            {
+        //                passengerSeat.Accepted = true;
+        //            }
+        //            else
+        //            {
+        //                passengerSeat.Accepted = false;
+        //            }
 
-                    _context.Entry(passengerSeat).State = EntityState.Added;
+        //            _context.Entry(passengerSeat).State = EntityState.Added;
 
-                    if(passengerSeat.Username != null && passengerSeat.Username != "" && passengerSeat.Username != inviter.UserName)
-                    {
-                        var user = await _userManager.FindByNameAsync(passengerSeat.Username);
+        //            if(passengerSeat.Username != null && passengerSeat.Username != "" && passengerSeat.Username != inviter.UserName)
+        //            {
+        //                var user = await _userManager.FindByNameAsync(passengerSeat.Username);
 
-                        flightReservation.FlightReservationDetails.ForEach(flightReservation => { user.NumberOfPoint += (int)Math.Round(flightReservation.Flight.Distance); });
+        //                flightReservation.FlightReservationDetails.ForEach(flightReservation => { user.NumberOfPoint += (int)Math.Round(flightReservation.Flight.Distance); });
 
-                        await _userManager.UpdateAsync(user);
+        //                await _userManager.UpdateAsync(user);
 
-                        //MailingService.SendEMailInvite(inviter, user, flightReservation, vehicle, tempFlightReservation.ReservationId);
-                    }
+        //                //MailingService.SendEMailInvite(inviter, user, flightReservation, vehicle, tempFlightReservation.ReservationId);
+        //            }
 
-                    Seat seat = await _context.Seats.FindAsync(passengerSeat.SeatId);
-                    seat.Occupied = true;
-                    _context.Entry(seat).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                }
+        //            Seat seat = await _context.Seats.FindAsync(passengerSeat.SeatId);
+        //            seat.Occupied = true;
+        //            _context.Entry(seat).State = EntityState.Modified;
+        //            await _context.SaveChangesAsync();
+        //        }
 
-                await _context.SaveChangesAsync();
-            }
+        //        await _context.SaveChangesAsync();
+        //    }
 
-            //MailingService.SendEMailReceipt(inviter, flightReservation, vehicle);
+        //    //MailingService.SendEMailReceipt(inviter, flightReservation, vehicle);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         // DELETE: api/FlightReservations/5
         [HttpDelete("{id}")]
@@ -680,7 +662,7 @@ namespace AirlineMicroservice.Controllers
 
             if(flightReservation.VehicleReservationId != 0)
             {
-                await deleteVehicleReservation(flightReservation.VehicleReservationId);
+                await deleteVehicleReservation(flightReservation.VehicleReservationId).ConfigureAwait(false);
             }
 
             foreach(FlightReservationDetail flightReservationDetail in flightReservation.FlightReservationDetails)

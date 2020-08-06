@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  mysql-server:
+    image: mysql/mysql-server:5.6
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "DatabasePassword!123"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "UserPassword!123"
+
+  airlinemicroservice:
+    image: ${DOCKER_REGISTRY-}airlinemicroservice
+    build:
+      context: .
+      dockerfile: AirlineMicroservice/Dockerfile
+    depends_on:
+      - mysql-server
+    ports:
+      - "32780:80"
+
+  rentacarmicroservice:
+    image: ${DOCKER_REGISTRY-}rentacarmicroservice
+    build:
+      context: .
+      dockerfile: RentACarMicroservice/Dockerfile
+    depends_on:
+      - mysql-server
+    ports:
+      - "32782:80"
+
+
+  usermicroservice:
+    image: ${DOCKER_REGISTRY-}usermicroservice
+    build:
+      context: .
+      dockerfile: UserMicroservice/Dockerfile
+    depends_on:
+      - mysql-server
+    ports:
+      - "32781:80"
+

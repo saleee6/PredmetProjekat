@@ -11,8 +11,8 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(){
     localStorage.setItem('port','52075'); //Original - 52075, Docker Desktop - 52716
-    localStorage.setItem('airlinePort', '57219');
-    localStorage.setItem('racPort', '57221');
-    localStorage.setItem('userPort', '57225');
+    localStorage.setItem('airlinePort', '32780');
+    localStorage.setItem('racPort', '32782');
+    localStorage.setItem('userPort', '32781');
   }
 }

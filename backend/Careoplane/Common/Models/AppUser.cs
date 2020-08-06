@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Common.Models
 {
-    public class AppUser : IdentityUser<string>
+    public class AppUser : Microsoft.AspNetCore.Identity.IdentityUser //<string>
     {
         public string Name { get; set; }
         public string Surname { get; set; }

@@ -11,7 +11,7 @@ namespace AirlineMicroservice.Models
 {
     public class Airline
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None), MaxLength(20)]
         public string Name { get; set; }
 
         public string Address { get; set; }

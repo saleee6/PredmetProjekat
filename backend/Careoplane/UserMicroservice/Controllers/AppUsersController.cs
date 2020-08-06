@@ -285,7 +285,9 @@ namespace UserMicroservice.Controllers
                 var Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim("UserID", user.Id.ToString()),
-                        new Claim("Roles", roles[0].ToString())
+                        new Claim("Roles", roles[0].ToString()),
+                        new Claim("Username", user.UserName.ToString()),
+                        new Claim("Company", user.Company == null ? "" : user.Company.ToString())
                     });
                 var Expires = DateTime.UtcNow.AddDays(1);
                 var SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature);
@@ -343,7 +345,8 @@ namespace UserMicroservice.Controllers
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim("UserID", user.Id.ToString()),
-                        new Claim("Roles", "regular")
+                        new Claim("Roles", "regular"),
+                        new Claim("Username", user.UserName.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddDays(1),
                     //Key min: 16 characters

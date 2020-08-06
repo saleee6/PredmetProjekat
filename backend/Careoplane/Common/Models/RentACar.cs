@@ -10,7 +10,7 @@ namespace Common.Models
 {
     public class RentACar
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None), MaxLength(20)]
         public string Name { get; set; }
 
         [Required]

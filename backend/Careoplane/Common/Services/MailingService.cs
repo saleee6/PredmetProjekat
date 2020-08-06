@@ -41,7 +41,7 @@ namespace Common.Services
 
         //    SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
         //    {
-        //        Credentials = new NetworkCredential("careoplane@gmail.com", "Careoplane11-9"),
+        //        Credentials = new NetworkCredential("careoplane@gmail.com", "Careoplane!1"),
         //        EnableSsl = true
         //    };
 
@@ -82,7 +82,7 @@ namespace Common.Services
 
         //    SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
         //    {
-        //        Credentials = new NetworkCredential("careoplane@gmail.com", "Careoplane11-9"),
+        //        Credentials = new NetworkCredential("careoplane@gmail.com", "Careoplane!1"),
         //        EnableSsl = true
         //    };
 
@@ -132,7 +132,7 @@ namespace Common.Services
 
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
             {
-                Credentials = new NetworkCredential("careoplane@gmail.com", "Careoplane11-9"),
+                Credentials = new NetworkCredential("careoplane@gmail.com", "Careoplane!1"),
                 EnableSsl = true
             };
             // code in brackets above needed if authentication required 
