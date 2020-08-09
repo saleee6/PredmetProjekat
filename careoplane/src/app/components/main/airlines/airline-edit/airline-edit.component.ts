@@ -200,7 +200,7 @@ export class AirlineEditComponent implements OnInit {
               const formData = new FormData();
               formData.append('file', this.uploadedFile, this.uploadedFile.name);
           
-              this.airlineService.saveImage(formData).subscribe(
+              this.airlineService.saveImage(formData, this.airline.name).subscribe(
                 result => {
                   let role = localStorage.getItem('role');
                   localStorage.setItem('role', role.substr(0, role.length-3));
@@ -230,7 +230,7 @@ export class AirlineEditComponent implements OnInit {
             const formData = new FormData();
             formData.append('file', this.uploadedFile, this.uploadedFile.name);
         
-            this.airlineService.saveImage(formData).subscribe(
+            this.airlineService.saveImage(formData, this.airline.name).subscribe(
               result => {
                 this.group.reset();
                 this.uploadedFile = null;

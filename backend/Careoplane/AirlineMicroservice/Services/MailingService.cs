@@ -14,7 +14,7 @@ namespace AirlineMicroservice.Services
 {
     public static class MailingService
     {
-        public static void SendEMailInvite(AppUser inviter, AppUser user, TOFlightReservation flightReservation, Vehicle vehicle, int id)
+        public static void SendEMailInvite(AppUser inviter, AppUser user, TOFlightReservation flightReservation, VehicleForEmail vehicle, int id)
         {
             MailAddress to = new MailAddress(user.Email, user.Name);
             MailAddress from = new MailAddress("careoplane@gmail.com", "Careoplane");
@@ -32,7 +32,7 @@ namespace AirlineMicroservice.Services
 
             if (vehicle != null)
             {
-                text += string.Format("\tVehicle ({1}): {0}\n", vehicle.Brand, vehicle.RentACar.Name);
+                text += string.Format("\tVehicle ({1}): {0}\n", vehicle.Brand, vehicle.RentACarName);
             }
 
             text += string.Format("\nIf you would like to accept or decline this invitaion, please follow this link {0}\n\n\t", link);
@@ -57,7 +57,7 @@ namespace AirlineMicroservice.Services
             }
         }
 
-        public static void SendEMailReceipt(AppUser user, TOFlightReservation flightReservation, Vehicle vehicle)
+        public static void SendEMailReceipt(AppUser user, TOFlightReservation flightReservation, VehicleForEmail vehicle)
         {
             MailAddress to = new MailAddress(user.Email, user.Name);
             MailAddress from = new MailAddress("careoplane@gmail.com", "Careoplane");
@@ -73,7 +73,7 @@ namespace AirlineMicroservice.Services
 
             if (vehicle != null)
             {
-                text += string.Format("\tVehicle ({1}): {0}\n\n", vehicle.Brand, vehicle.RentACar.Name);
+                text += string.Format("\tVehicle ({1}): {0}\n\n", vehicle.Brand, vehicle.RentACarName);
             }
 
             text += string.Format("Final price: €{0}\n\n\t", flightReservation.FinalPrice);

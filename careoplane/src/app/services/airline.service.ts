@@ -113,7 +113,7 @@ export class AirlineService {
     var params = new HttpParams()
       .append('origin',origin)
       .append('destination',destination)
-      .append('departure', this.datePipe.transform(departure, 'dd.MM.yyyy HH:mm'))
+      .append('departure', new Date(departure).toDateString())
       .append('numPassengers',num.toString())
       .append('classType',classType)
       .append('name', name)
@@ -174,7 +174,11 @@ export class AirlineService {
   EditFlight(flight: Flight) {
     let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights/' + flight.id.toString();
     let tempFlight = new TOFlight(flight.airlineName,flight.origin,flight.destination,
-      flight.departure.toString(),flight.arrival.toString(),flight.distance,flight.connections,
+      /* this.datePipe.transform(flight.departure, 'dd.MM.yyyy HH:mm'),
+      this.datePipe.transform(flight.arrival, 'dd.MM.yyyy HH:mm'), */
+      new Date(flight.departure).toDateString(),
+      new Date(flight.arrival).toDateString(),
+      flight.distance,flight.connections,
       flight.id,[],[],[],[],flight.rating,flight.version);
     return this.http.put(address,tempFlight);
   }
@@ -182,7 +186,11 @@ export class AirlineService {
   AddFlgiht(flight: Flight) {
     let address ='http://localhost:' + localStorage.getItem('airlinePort') + '/api/Flights';
     let tempFlight = new TOFlight(flight.airlineName,flight.origin,flight.destination,
-      flight.departure.toString(),flight.arrival.toString(),flight.distance,flight.connections,
+      /* this.datePipe.transform(flight.departure, 'dd.MM.yyyy HH:mm'),
+      this.datePipe.transform(flight.arrival, 'dd.MM.yyyy HH:mm'), */
+      new Date(flight.departure).toDateString(),
+      new Date(flight.arrival).toDateString(),
+      flight.distance,flight.connections,
       flight.id,[],[],[],[],0,0);
     return this.http.post(address,tempFlight);
   }
@@ -281,8 +289,8 @@ export class AirlineService {
     return this.http.put(address, params);
   }
 
-  saveImage(formData){
-    return this.http.post('http://localhost:' + localStorage.getItem('airlinePort') + '/api/Upload', formData);
+  saveImage(formData, company: string){
+    return this.http.post('http://localhost:' + localStorage.getItem('airlinePort') + '/api/Upload?company=' + company, formData);
   }
 
   getSeats(id: number){

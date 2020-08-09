@@ -1,15 +1,6 @@
 version: '3.4'
 
 services:
-  mysql-server:
-    image: mysql/mysql-server:5.6
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "DatabasePassword!123"
-      MYSQL_USER: "user"
-      MYSQL_PASSWORD: "UserPassword!123"
-
   airlinemicroservice:
     image: ${DOCKER_REGISTRY-}airlinemicroservice
     build:
@@ -41,3 +32,15 @@ services:
     ports:
       - "32781:80"
 
+  mysql-server:
+    image: mysql/mysql-server:5.6
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "DatabasePassword!123"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "UserPassword!123"
+    volumes:
+      - dbdata:/var/lib/mysql
+volumes:
+  dbdata:

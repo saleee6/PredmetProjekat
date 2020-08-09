@@ -16,6 +16,10 @@ using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.FileProviders;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using AirlineMicroservice.Services;
+using System.Text.Json;
+using System.Text;
 
 namespace AirlineMicroservice.Controllers
 {
@@ -535,117 +539,145 @@ namespace AirlineMicroservice.Controllers
         {
             using (HttpClient client = new HttpClient())
             {
-                var httpRequest = new HttpRequestMessage(HttpMethod.Delete, "http://rentacarmicroservice/VehicleReservations/" + id.ToString());
+                var httpRequest = new HttpRequestMessage(HttpMethod.Delete,
+                    "http://rentacarmicroservice/api/VehicleReservations/Airline/" + id.ToString());
                 await client.SendAsync(httpRequest);
             }
-
         }
 
         // POST: api/FlightReservations
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPost("{points}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<ActionResult<FlightReservation>> PostFlightReservation(TOFlightReservation flightReservation, int points)
-        //{
-        //    TOFlight tempFlight = new TOFlight();
 
-        //    string userId = User.Claims.First(c => c.Type == "UserID").Value;
-        //    string username = User.Claims.First(c => c.Type == "Username").Value;
-        //    //var inviter = await _userManager.FindByIdAsync(userId);
+        [HttpPost("{points}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<FlightReservation>> PostFlightReservation(TOFlightReservation flightReservation, int points)
+        {
+            TOFlight tempFlight = new TOFlight();
 
-        //    Common.Models.VehicleReservation vehicleReservation = null;
-        //    Common.Models.Vehicle vehicle = null;
+            string userId = User.Claims.First(c => c.Type == "UserID").Value;
+            string username = User.Claims.First(c => c.Type == "Username").Value;
 
-        //    if (flightReservation.VehicleReservationId != 0)
-        //    {
-        //        vehicleReservation = await _rentACarContext.VehicleReservation.FindAsync(flightReservation.VehicleReservationId);
-        //        vehicle = await _rentACarContext.Vehicles.Include(vehicle => vehicle.RentACar).FirstOrDefaultAsync(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId);
-        //    }
+            Common.Models.AppUser inviter = null;
 
-        //    FlightReservation tempFlightReservation = new FlightReservation()
-        //    {
-        //        ReservationId = 0,
-        //        TimeOfCreation = DateTime.Now,
-        //        Creator = username,
-        //        VehicleReservationId = flightReservation.VehicleReservationId,
-        //        FinalPrice = flightReservation.FinalPrice
-        //    };
+            using (HttpClient client = new HttpClient())
+            {
+                var httpRequest = new HttpRequestMessage(HttpMethod.Get,
+                    "http://usermicroservice/api/AppUsers/GetUser/" + username);
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage message = await client.SendAsync(httpRequest);
+                //inviter = await message.Content.ReadAsAsync<AppUser>();
+                var temp = await message.Content.ReadAsStringAsync();
+                inviter = JsonSerializer.Deserialize<Common.Models.AppUser>(temp);
+            }
 
-        //    flightReservation.FlightReservationDetails.ForEach(flightReservation => { inviter.NumberOfPoint += (int)Math.Round(flightReservation.Flight.Distance); });
-        //    inviter.NumberOfPoint -= points;
+            Common.Models.VehicleForEmail vehicle = null;
 
-        //    await _userManager.UpdateAsync(inviter);
+            if (flightReservation.VehicleReservationId != 0)
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var httpRequest = new HttpRequestMessage(HttpMethod.Get,
+                        "http://rentacarmicroservice/api/VehicleReservations/Vehicle/" + flightReservation.VehicleReservationId);
+                    HttpResponseMessage message = await client.SendAsync(httpRequest);
+                    var temp = await message.Content.ReadAsStringAsync();
+                    vehicle = JsonSerializer.Deserialize<Common.Models.VehicleForEmail>(temp);
+                }
+            }
 
-        //    _context.FlightReservations.Add(tempFlightReservation);
-        //    await _context.SaveChangesAsync();
+            FlightReservation tempFlightReservation = new FlightReservation()
+            {
+                ReservationId = 0,
+                TimeOfCreation = DateTime.Now,
+                Creator = ((Common.Models.AppUser)inviter).UserName,
+                VehicleReservationId = flightReservation.VehicleReservationId,
+                FinalPrice = flightReservation.FinalPrice
+            };
 
-        //    foreach (TOFlightReservationDetail tOFlightReservationDetail in flightReservation.FlightReservationDetails)
-        //    {
-        //        tempFlight = tOFlightReservationDetail.Flight;
+            flightReservation.FlightReservationDetails.ForEach(flightReservation => { ((Common.Models.AppUser)inviter).NumberOfPoint += (int)Math.Round(flightReservation.Flight.Distance); });
+            ((Common.Models.AppUser)inviter).NumberOfPoint -= points;
 
-        //        FlightReservationDetail flightReservationDetail = new FlightReservationDetail()
-        //        {
-        //            FlightId = tOFlightReservationDetail.Flight.FlightId,
-        //            FlightReservation = tempFlightReservation,
-        //            FlightReservationDetailId = 0,
-        //            AirlineName = tOFlightReservationDetail.Flight.AirlineName
-        //        };
+            using (var client = new HttpClient())
+            {
+                Common.Models.PointsClass p = new Common.Models.PointsClass { Id = inviter.Id, Points = inviter.NumberOfPoint };
+                client.BaseAddress = new Uri("http://usermicroservice/");
+                await client.PutAsJsonAsync("api/AppUsers/UpdatePoints", p);
+            }
 
-        //        _context.Entry(flightReservationDetail).State = EntityState.Added;
+            _context.FlightReservations.Add(tempFlightReservation);
+            await _context.SaveChangesAsync();
 
-        //        await _context.SaveChangesAsync();
+            foreach (TOFlightReservationDetail tOFlightReservationDetail in flightReservation.FlightReservationDetails)
+            {
+                tempFlight = tOFlightReservationDetail.Flight;
 
-        //        foreach (TOPassengerSeat tOPassengerSeat in tOFlightReservationDetail.PassengerSeats)
-        //        {
-        //            PassengerSeat passengerSeat = new PassengerSeat()
-        //            {
-        //                SeatId = tOPassengerSeat.Seat.SeatId,
-        //                Surname = tOPassengerSeat.Surname,
-        //                PassengerSeatId = 0,
-        //                Name = tOPassengerSeat.Name,
-        //                Passport = tOPassengerSeat.Passport,
-        //                Username = tOPassengerSeat.Username,
-        //                FlightReservationDetail = flightReservationDetail,
-        //                AirlineScored = false,
-        //                FlightScored = false,
-        //            };
+                FlightReservationDetail flightReservationDetail = new FlightReservationDetail()
+                {
+                    FlightId = tOFlightReservationDetail.Flight.FlightId,
+                    FlightReservation = tempFlightReservation,
+                    FlightReservationDetailId = 0,
+                    AirlineName = tOFlightReservationDetail.Flight.AirlineName
+                };
 
-        //            if (passengerSeat.Username == "" || passengerSeat.Username == inviter.UserName)
-        //            {
-        //                passengerSeat.Accepted = true;
-        //            }
-        //            else
-        //            {
-        //                passengerSeat.Accepted = false;
-        //            }
+                _context.Entry(flightReservationDetail).State = EntityState.Added;
 
-        //            _context.Entry(passengerSeat).State = EntityState.Added;
+                await _context.SaveChangesAsync();
 
-        //            if(passengerSeat.Username != null && passengerSeat.Username != "" && passengerSeat.Username != inviter.UserName)
-        //            {
-        //                var user = await _userManager.FindByNameAsync(passengerSeat.Username);
+                foreach (TOPassengerSeat tOPassengerSeat in tOFlightReservationDetail.PassengerSeats)
+                {
+                    PassengerSeat passengerSeat = new PassengerSeat()
+                    {
+                        SeatId = tOPassengerSeat.Seat.SeatId,
+                        Surname = tOPassengerSeat.Surname,
+                        PassengerSeatId = 0,
+                        Name = tOPassengerSeat.Name,
+                        Passport = tOPassengerSeat.Passport,
+                        Username = tOPassengerSeat.Username,
+                        FlightReservationDetail = flightReservationDetail,
+                        AirlineScored = false,
+                        FlightScored = false,
+                    };
 
-        //                flightReservation.FlightReservationDetails.ForEach(flightReservation => { user.NumberOfPoint += (int)Math.Round(flightReservation.Flight.Distance); });
+                    if (passengerSeat.Username == "" || passengerSeat.Username == ((Common.Models.AppUser)inviter).UserName)
+                    {
+                        passengerSeat.Accepted = true;
+                    }
+                    else
+                    {
+                        passengerSeat.Accepted = false;
+                    }
 
-        //                await _userManager.UpdateAsync(user);
+                    _context.Entry(passengerSeat).State = EntityState.Added;
 
-        //                //MailingService.SendEMailInvite(inviter, user, flightReservation, vehicle, tempFlightReservation.ReservationId);
-        //            }
+                    if (passengerSeat.Username != null && passengerSeat.Username != "" && passengerSeat.Username != ((Common.Models.AppUser)inviter).UserName)
+                    {
+                        Common.Models.AppUser user = null;
 
-        //            Seat seat = await _context.Seats.FindAsync(passengerSeat.SeatId);
-        //            seat.Occupied = true;
-        //            _context.Entry(seat).State = EntityState.Modified;
-        //            await _context.SaveChangesAsync();
-        //        }
+                        using (HttpClient client = new HttpClient())
+                        {
+                            var httpRequest = new HttpRequestMessage(HttpMethod.Get,
+                                "http://usermicroservice/api/AppUsers/GetUser/" + passengerSeat.Username);
+                            HttpResponseMessage message = await client.SendAsync(httpRequest);
+                            var temp = await message.Content.ReadAsStringAsync();
+                            user = JsonSerializer.Deserialize<Common.Models.AppUser>(temp);
+                        }
 
-        //        await _context.SaveChangesAsync();
-        //    }
+                        MailingService.SendEMailInvite(((Common.Models.AppUser)inviter), (Common.Models.AppUser)user, flightReservation, vehicle, tempFlightReservation.ReservationId);
+                    }
 
-        //    //MailingService.SendEMailReceipt(inviter, flightReservation, vehicle);
+                    Seat seat = await _context.Seats.FindAsync(passengerSeat.SeatId);
+                    seat.Occupied = true;
+                    _context.Entry(seat).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                }
 
-        //    return Ok();
-        //}
+                await _context.SaveChangesAsync();
+            }
+
+            MailingService.SendEMailReceipt(((Common.Models.AppUser)inviter), flightReservation, vehicle);
+
+            return Ok();
+        }
 
         // DELETE: api/FlightReservations/5
         [HttpDelete("{id}")]

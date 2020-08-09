@@ -19,7 +19,7 @@ export class AirlineComponent implements OnInit {
   }
 
   public createImgPath = (serverPath: string) => {
-    let s = `http://localhost:` + localStorage.getItem('port') + `/${this.image}`; 
+    let s = `http://localhost:` + localStorage.getItem('airlinePort') + `/${this.image}`; 
     return s;
   }
 }

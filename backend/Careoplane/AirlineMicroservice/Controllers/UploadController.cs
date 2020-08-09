@@ -29,7 +29,7 @@ namespace Careoplane.Controllers
 
         [HttpPost, DisableRequestSizeLimit]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<Object> Upload()
+        public async Task<Object> Upload([FromQuery]string company)
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
             string role = User.Claims.First(c => c.Type == "Roles").Value;
@@ -43,7 +43,11 @@ namespace Careoplane.Controllers
 
             try
             {
-                string company = User.Claims.First(c => c.Type == "Company").Value;
+                string companyClaim = User.Claims.First(c => c.Type == "Company").Value;
+                if (companyClaim == "" || companyClaim == null)
+                {
+                    companyClaim = company;
+                }
                 var file = Request.Form.Files[0];
                 var folderName = Path.Combine("StaticFiles", "Images");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
@@ -59,7 +63,7 @@ namespace Careoplane.Controllers
                         file.CopyTo(stream);
                     }
 
-                    AirlineMicroservice.Models.Airline airline = await _context.Airlines.FindAsync(company);
+                    AirlineMicroservice.Models.Airline airline = await _context.Airlines.FindAsync(companyClaim);
                     airline.Image = dbPath;
 
                     _context.Entry(airline).State = EntityState.Modified;

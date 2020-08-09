@@ -98,7 +98,7 @@ export class AirlineDetailsComponent implements OnInit, AfterViewInit{
   }
 
   public createImgPath = (serverPath: string) => {
-    let s = `http://localhost:` + localStorage.getItem('port') + `/${this.airline.picture}`; 
+    let s = `http://localhost:` + localStorage.getItem('airlinePort') + `/${this.airline.picture}`; 
     return s;
   }
 }

@@ -483,5 +483,26 @@ namespace UserMicroservice.Controllers
 
             return true;
         }
+
+        [HttpGet]
+        [Route("GetUser/{userId}")]
+        public async Task<Object> GetUser(string userId)
+        {
+            var user = await _userManager.FindByNameAsync(userId);
+
+            return System.Text.Json.JsonSerializer.Serialize(user);
+        }
+
+        [HttpPut]
+        [Route("UpdatePoints")]
+        public async Task UpdatePoints([FromBody] JObject obj)
+        {
+            string id = obj["Id"].ToString();
+            int points = obj["Points"].ToObject<int>();
+            var user = await _userManager.FindByIdAsync(id);
+            user.NumberOfPoint = points;
+
+            await _userManager.UpdateAsync(user);
+        }
     }
 }

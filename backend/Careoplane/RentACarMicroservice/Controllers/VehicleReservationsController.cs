@@ -253,7 +253,7 @@ namespace RentACarMicroservice.Controllers
         }
 
         [HttpGet("Vehicle/{id}")]
-        async Task<ActionResult<Vehicle>> GetVehicleForReservation(int id)
+        public async Task<Object> GetVehicleForReservation(int id)
         {
             var vehicleReservation = await _context.VehicleReservation.FindAsync(id);
 
@@ -272,36 +272,42 @@ namespace RentACarMicroservice.Controllers
                 return NotFound();
             }
 
-            return vehicle;
+            VehicleForEmail vehicleForEmail = new VehicleForEmail()
+            {
+                Brand = vehicle.Brand,
+                RentACarName = vehicle.RentACar.Name
+            };
+
+            return System.Text.Json.JsonSerializer.Serialize(vehicleForEmail);
         }
 
-        //[HttpDelete("{id}")]
-        //async Task<object> deleteVehicleReservation(int id)
-        //{
-        //    VehicleReservation vehicleReservation = await _context.VehicleReservation.FindAsync(id);
-        //    var vehicle = await _context.Vehicles.Include(vehicle => vehicle.UnavailableDates).FirstOrDefaultAsync(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId);
+        [HttpDelete("Airline/{id}")]
+        public async Task<ActionResult<TOVehicleReservation>> DeleteVehicleReservationCombined(int id)
+        {
+            var vehicleReservation = await _context.VehicleReservation.FindAsync(id);
+            if (vehicleReservation == null)
+            {
+                return NotFound();
+            }
 
-        //    vehicle.UnavailableDates.ToList().ForEach(
-        //        unavailableDate =>
-        //        {
-        //            if (unavailableDate.Date.Date >= vehicleReservation.FromDate.Date && unavailableDate.Date.Date <= vehicleReservation.ToDate.Date)
-        //            {
-        //                _context.Remove(unavailableDate);
-        //            }
-        //        }
-        //    );
-        //    _context.Entry(vehicleReservation).State = EntityState.Deleted;
+            _context.VehicleReservation.Remove(vehicleReservation);
+            await _context.SaveChangesAsync();
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //        return Ok();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest();
-        //    }
+            var vehicle = await _context.Vehicles.Include(vehicle => vehicle.UnavailableDates).FirstOrDefaultAsync(vehicle => vehicle.VehicleId == vehicleReservation.VehicleId);
 
-        //}
+            vehicle.UnavailableDates.ToList().ForEach(
+                unavailableDate =>
+                {
+                    if (unavailableDate.Date.Date >= vehicleReservation.FromDate.Date && unavailableDate.Date.Date <= vehicleReservation.ToDate.Date)
+                    {
+                        _context.Remove(unavailableDate);
+                    }
+                }
+            );
+
+            await _context.SaveChangesAsync();
+
+            return vehicleReservation.ToTO();
+        }
     }
 }
