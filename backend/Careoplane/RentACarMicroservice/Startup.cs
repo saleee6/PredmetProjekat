@@ -45,14 +45,6 @@ namespace RentACarMicroservice
             services.AddDbContextPool<DatabaseContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("DatabaseContext")));
 
-            //services.AddDbContext<DatabaseContext>(options =>
-            //        options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext")));
-
-            //services.AddDbContext<AuthenticationContext>(options =>
-            //       options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext")));
-
-            //services.AddDefaultIdentity<AppUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<AuthenticationContext>();
-
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -117,13 +109,6 @@ namespace RentACarMicroservice
             );
 
             app.UseHttpsRedirection();
-
-            //app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions()
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles")),
-            //    RequestPath = new PathString("/StaticFiles")
-            //});
 
             app.UseRouting();
 

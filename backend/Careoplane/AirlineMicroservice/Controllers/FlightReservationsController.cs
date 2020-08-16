@@ -564,9 +564,7 @@ namespace AirlineMicroservice.Controllers
             {
                 var httpRequest = new HttpRequestMessage(HttpMethod.Get,
                     "http://usermicroservice/api/AppUsers/GetUser/" + username);
-                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage message = await client.SendAsync(httpRequest);
-                //inviter = await message.Content.ReadAsAsync<AppUser>();
                 var temp = await message.Content.ReadAsStringAsync();
                 inviter = JsonSerializer.Deserialize<Common.Models.AppUser>(temp);
             }
